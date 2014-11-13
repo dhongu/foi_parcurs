@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- fleet doc -->
+		<record id='fleet_vehicle_doc_form' model='ir.ui.view' >
+			<field name="name">fleet.vehicle.doc.form</field>
+			<field name="model">fleet.vehicle.doc</field>
+			<field name="arch" type="xml">	
+				<form>
+					<field name="name" />
+					<field name="vehicle_id" />	
+				</form>
+			</field>
+		</record>		
+		<record id='fleet_vehicle_doc_tree' model='ir.ui.view' >
+			<field name="name">fleet.vehicle.doct.tree</field>
+			<field name="model">fleet.vehicle.doc</field>
+			<field name="arch" type="xml">
+				<tree string="Vehicle Document" colors="orange:days_left>0 and days_left&lt;15;red:days_left==0;grey:state=='closed'">
+					<field name="name" />
+					<field name="vehicle_id" />
+					<field name="start_date"/>
+					<field name="expiration_date">
+				</tree>
+			</field>
+		</record>
+		<record id="fleet_vehicle_doc_gantt" model="ir.ui.view">
+			<field name="name">fleet.vehicle.doc.gantt</field>
+			<field name="model">fleet.vehicle.doc</field>
+			<field name="arch" type="xml">
+				<gantt date_start="start_date" date_stop="expiration_date" mode="week" string="vehicle doc" default_group_by="vehicle_id" ></gantt>
+			</field>
+		</record>
+		<record id="fleet_vehicle_doc_calendar" model="ir.ui.view">
+			<field name="name">fleet.vehicle.doc.calendar</field>
+			<field name="model">fleet.vehicle.doc</field>
+			<field name="arch" type="xml">
+				<calendar date_start="date_start" date_stop="date_end" mode="week" string="vehicle doc">
+					<field name="name"/>
+					<field name="vehicle_id" />
+				</calendar>
+			</field>
+		</record>
+		
+		<record id="fleet_vehicle_doc_graph" model="ir.ui.view" >
+            <field name="name">fleet.vehicle.doc.graph</field>
+            <field name="model">fleet.vehicle.doc</field>
+            <field name="arch" type="xml">
+                <graph string="vehicle docs" type="bar">
+                    <field name="vehicle_id"/>
+                    <field name="distance_total" operator="+"/>
+                    <field name="liter_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
+		
+		
+		<record id='fleet_vehicle_doc_search' model='ir.ui.view' >
+			<field name="name">fleet.vehicle.doc.search</field>
+			<field name="model">fleet.vehicle.doc</field>
+			<field name="arch" type="xml">
+				<search string="vehicle doc" >
+					<field name="vehicle_id" />
+					<field name="date"/>
+					<group expand="1" string="Group By...">
+						<filter name="groupby_date" context="{'group_by' : 'date'}" string="Date"/>
+						<filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		<record id='fleet_vehicle_doc_act' model='ir.actions.act_window' >
+			<field name="name">vehicle docs</field>
+			<field name="res_model">fleet.vehicle.doc</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,gantt,calendar,graph</field>
+			<field name="context">{"search_default_groupby_date": True,  "search_default_groupby_vehicle_id" : True,}</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Click to create a new vehicle doc.</p>
+				<p>Here you can add vehicle doc for all vehicles.</p>
+			</field>
+		</record>
+		<menuitem action="fleet_vehicle_doc_act" parent="fleet.fleet_vehicles" id="fleet_vehicle_doc_menu" groups="fleet.group_fleet_user"/>
+
+
+
+
+
+
+	</data>
+</openerp>
+
+

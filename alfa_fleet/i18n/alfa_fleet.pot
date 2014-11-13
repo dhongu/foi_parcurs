@@ -1,0 +1,596 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* alfa_fleet
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0-20130220-002430\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-02-25 17:19+0000\n"
+"PO-Revision-Date: 2013-02-25 17:19+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: alfa_fleet
+#: field:fleet.vehicle.log.fuel,full:0
+msgid "To full"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,odometer_start:0
+msgid "Odometer measure of the vehicle at the start of this map sheet"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.fuel,fuel_type:0
+msgid "Diesel"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle,tachometer:0
+msgid "Tachometer"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: view:fleet.route.log:0
+msgid "Group By..."
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.location,type:0
+msgid "Station"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: field:fleet.map.sheet,vehicle_id:0
+#: help:fleet.map.sheet,vehicle_id:0
+#: field:fleet.reservoir.level,vehicle_id:0
+#: view:fleet.route.log:0
+#: field:fleet.route.log,vehicle_id:0
+msgid "Vehicle"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.reservoir.level,liter:0
+msgid "Liter"
+msgstr ""
+
+#. module: alfa_fleet
+#: sql_constraint:fleet.card:0
+msgid "The series must be unique !"
+msgstr ""
+
+#. module: alfa_fleet
+#: constraint:fleet.route.log:0
+msgid "Error ! Route end-date must be greater then route start-begin"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle,loading_level:0
+msgid "Level of loading"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,odometer_start_id:0
+msgid "ID Odometer start"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.route.log,date_begin:0
+msgid "Date Begin"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.vehicle.log.fuel,full:0
+msgid "Fuel supply was made up to full"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.card:0
+#: field:fleet.card,vehicle_ids:0
+msgid "Vehicles"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.location,lng:0
+msgid "Longitude"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.actions.act_window,help:alfa_fleet.fleet_map_sheet_act
+msgid "<p class=\"oe_view_nocontent_create\">Click to create a new map sheet.</p>\n"
+"				<p>Here you can add map sheet for all vehicles.</p>\n"
+"			"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+msgid "Fuel Logs"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.card:0
+#: field:fleet.vehicle,card_ids:0
+msgid "Cards"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle,mass_cap:0
+msgid "Mass capacity"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.map.sheet,state:0
+msgid "Ready"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.location,type:0
+msgid "Partner"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.route,from_loc_id:0
+msgid "From"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.actions.act_window,help:alfa_fleet.fleet_location_act
+msgid "<p class=\"oe_view_nocontent_create\">Click to create a new location.</p>\n"
+"			"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.ui.menu,name:alfa_fleet.fleet_masterdata_menu
+msgid "Master data"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.actions.act_window,name:alfa_fleet.fleet_location_act
+#: model:ir.ui.menu,name:alfa_fleet.fleet_locations_menu
+msgid "Locations"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.location:0
+#: field:fleet.location,name:0
+#: model:ir.model,name:alfa_fleet.model_fleet_location
+msgid "Location"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.location,lat:0
+msgid "Latitude"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.location,type:0
+msgid "Type"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,driver_id:0
+msgid "Driver of the vehicle"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: view:fleet.route.log:0
+msgid "Total Distance"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.model,name:alfa_fleet.model_fleet_vehicle_log_fuel
+msgid "Fuel log for vehicles"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle,reservoir:0
+msgid "Reservoir capacity"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.model,name:alfa_fleet.model_fleet_map_sheet
+msgid "Fleet Map Sheet"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.card,type_card:0
+msgid "Own pomp"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.fuel,fuel_type:0
+msgid "Gasoline"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.route,from_loc_id:0
+msgid "From location"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: field:fleet.map.sheet,liter_total:0
+msgid "Total Liter"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,odometer_start:0
+msgid "Odometer Start"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.vehicle,tachometer:0
+msgid "Status of tachometer"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,state:0
+msgid "When the Map Sheet is created the status is set to 'Draft'.\n"
+"                  When the Map Sheet is over, the status is set to 'Done'."
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.model,name:alfa_fleet.model_fleet_vehicle_cost
+msgid "Cost related to a vehicle"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.card,type_card:0
+msgid "Type Card"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,driver2_id:0
+#: field:fleet.vehicle,driver2_id:0
+msgid "Backup Driver"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+msgid "Total liter"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.model,name:alfa_fleet.model_fleet_card
+msgid "Fuel Card"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,liter_total:0
+msgid "The total liters"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: field:fleet.map.sheet,amount_total:0
+msgid "Total Amount"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.vehicle.category:0
+#: field:fleet.vehicle.category,name:0
+msgid "Category"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,driver2_id:0
+#: help:fleet.vehicle,driver2_id:0
+msgid "Backup driver of the vehicle"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,distance_total:0
+msgid "The total distance"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.card,name:0
+msgid "Series card"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.map.sheet,state:0
+msgid "Draft"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.fuel,fuel_type:0
+msgid "Fuel Type"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,odometer_end_id:0
+msgid "ID Odometer end"
+msgstr ""
+
+#. module: alfa_fleet
+#: sql_constraint:fleet.vehicle:0
+msgid "The Indicative must be unique !"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,state:0
+msgid "Status"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.card,type_card:0
+msgid "Rompetrol"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: field:fleet.route.log,map_sheet_id:0
+#: field:fleet.vehicle.log.fuel,map_sheet_id:0
+msgid "Map Sheet"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.card,type_card:0
+msgid "Petrom"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,norm_cons:0
+#: field:fleet.route.log,norm_cons:0
+msgid "Normal Consumption"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,driver_id:0
+msgid "Driver"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.actions.act_window,name:alfa_fleet.fleet_map_sheet_act
+#: model:ir.ui.menu,name:alfa_fleet.fleet_map_sheet_menu
+msgid "Map Sheets"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: field:fleet.map.sheet,date:0
+#: field:fleet.reservoir.level,date:0
+msgid "Date"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle.log.fuel,card_id:0
+#: model:ir.actions.act_window,name:alfa_fleet.fleet_card_act
+#: model:ir.ui.menu,name:alfa_fleet.fleet_card_menu
+msgid "Card"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.route,to_loc_id:0
+msgid "To location"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+msgid "Total Odometer"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,odometer_end:0
+msgid "Odometer End"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.card,active:0
+msgid "Active"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.card:0
+#: field:fleet.card,log_fuel_ids:0
+#: field:fleet.map.sheet,log_fuel_ids:0
+msgid "Fuel log"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle,reservoir_level:0
+msgid "Level Reservoir"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.route,time:0
+msgid "Time"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.actions.act_window,name:alfa_fleet.fleet_route_act
+#: model:ir.ui.menu,name:alfa_fleet.fleet_route_menu
+msgid "Routes"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,norm_cons:0
+#: help:fleet.route.log,norm_cons:0
+msgid "The Normal Consumption"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,date_end:0
+#: field:fleet.route.log,date_end:0
+msgid "Date End"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: field:fleet.map.sheet,route_log_ids:0
+#: view:fleet.route.log:0
+#: model:ir.actions.act_window,name:alfa_fleet.fleet_route_log_act
+#: model:ir.model,name:alfa_fleet.model_fleet_route_log
+#: model:ir.ui.menu,name:alfa_fleet.fleet_route_log_menu
+msgid "Route Log"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,category_id:0
+#: field:fleet.vehicle,category_id:0
+#: model:ir.actions.act_window,name:alfa_fleet.fleet_vehicle_category_act
+#: model:ir.model,name:alfa_fleet.model_fleet_vehicle_category
+#: model:ir.ui.menu,name:alfa_fleet.fleet_vehicle_category_menu
+msgid "Vehicle Category"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,name:0
+msgid "Number"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.map.sheet:0
+#: view:fleet.route.log:0
+msgid "Total Normal Consumption"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.map.sheet,state:0
+msgid "Done"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.card,type_card:0
+msgid "OMV"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,amount_total:0
+msgid "The total amount for fuel"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.model,name:alfa_fleet.model_fleet_vehicle_odometer
+msgid "Odometer log for a vehicle"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.route,to_loc_id:0
+msgid "To"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.location,type:0
+msgid "Other"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.fuel:0
+#: field:fleet.fuel,name:0
+#: field:fleet.vehicle.log.fuel,fuel_id:0
+#: model:ir.model,name:alfa_fleet.model_fleet_fuel
+msgid "Fuel"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,avg_cons:0
+#: field:fleet.vehicle,avg_cons:0
+msgid "Average Consumption"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.actions.act_window,name:alfa_fleet.fleet_fuel_act
+#: model:ir.ui.menu,name:alfa_fleet.fleet_fuel_menu
+msgid "Fuels"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,date_end:0
+msgid "Date time at the end of this map sheet"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle.odometer,real:0
+msgid "Is real"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle,avg_speed:0
+msgid "Average Speed"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.vehicle,indicative:0
+msgid "Indicative"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,date_start:0
+msgid "Date time at the start of this map sheet"
+msgstr ""
+
+#. module: alfa_fleet
+#: help:fleet.map.sheet,odometer_end:0
+msgid "Odometer measure of the vehicle at the end of this map sheet"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,distance_total:0
+msgid "Total distance"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.actions.act_window,help:alfa_fleet.fleet_route_act
+msgid "<p class=\"oe_view_nocontent_create\">Click to create a new route.</p>\n"
+"			"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.route,distance:0
+#: field:fleet.route.log,distance:0
+msgid "Distance"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.route,name:0
+#: field:fleet.route.log,name:0
+msgid "Name"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.route:0
+#: field:fleet.route.log,route_id:0
+#: model:ir.model,name:alfa_fleet.model_fleet_route
+msgid "Route"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.model,name:alfa_fleet.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
+
+#. module: alfa_fleet
+#: model:ir.model,name:alfa_fleet.model_fleet_reservoir_level
+msgid "Fleet Reservoir Level"
+msgstr ""
+
+#. module: alfa_fleet
+#: selection:fleet.card,type_card:0
+msgid "Lukoil"
+msgstr ""
+
+#. module: alfa_fleet
+#: field:fleet.map.sheet,date_start:0
+msgid "Date Start"
+msgstr ""
+
+#. module: alfa_fleet
+#: view:fleet.route.log:0
+msgid "Route Logs"
+msgstr ""
+

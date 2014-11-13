@@ -1,0 +1,536 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- inherit view -->
+		<!-- Vehicle -->
+		<record id="alfa_fleet_form_view" model="ir.ui.view">
+			<field name="name">alfa.fleet.form</field>
+			<field name="model">fleet.vehicle</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+			<field name="arch" type="xml">
+
+				<label for="tag_ids" position="before">
+					<label for="indicative" class="oe_edit_only"/>
+					<h3>
+						<field name="indicative" class="oe_inline"/>
+					</h3>
+				</label>
+				<button name="act_show_log_cost" position="after">
+					<button name="act_show_map_sheet" type="object"  class="oe_stat_button" icon="fa-random"  string="Map Sheets" help="show map sheet for this vehicle" groups="fleet.group_fleet_manager"/>
+				</button>
+				<field name="driver_id" position="before">
+					<field name="category_id"/>
+				</field>
+				<field name="driver_id" position="after">
+					<field name="driver2_id"/>
+				</field>
+				<field name="color" position="after">
+					<field name="mass_cap"/>
+					<field name="tachometer"/>
+					<field name="loading_level"/>
+					
+					<field name="reservoir_level"/>
+					<field name="reservoir"/>
+					<field name="avg_cons"/>
+					<field name="avg_speed"/>
+					<field name="card_ids"/>
+				</field>
+			</field>
+		</record>
+
+		<!-- Fuel log -->
+	 
+		<record id='alfa_fleet_vehicle_log_fuel_form' model='ir.ui.view' >
+			<field name="name">alfa.fleet.vehicle.log.fuel.form</field>
+			<field name="model">fleet.vehicle.log.fuel</field>
+			<field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_form"/>
+			<field name="arch" type="xml">
+				<data>
+					<field name="date" position ="replace">
+						<field name="date_time"/>
+					</field>
+					<field name="vehicle_id" position="after">
+						<field name="reservoir_level"/>
+					</field>
+					<field name="amount" position="after">
+						<field name="full"/>
+						<field name="fuel_id"/>
+						<field name="map_sheet_id" context="{'vehicle_id':vehicle_id, 'date':date_time}"/>
+					</field>
+					<field name="vendor_id" position="after">
+						<field name="card_id"/>
+					</field>
+				</data>
+			</field>
+		</record>
+		
+		<record id='alfa_fleet_vehicle_log_fuel_tree' model='ir.ui.view' >
+			<field name="name">alfa.fleet.vehicle.log.fuel.tree</field>
+			<field name="model">fleet.vehicle.log.fuel</field>
+			<field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_tree"/>
+			<field name="arch" type="xml">
+				<data>
+				<field name="date" position ="replace">
+						<field name="date_time"/>
+					</field>
+				<field name="amount" position="after">
+					<field name="full"/>
+					<field name="reservoir_level"/>
+					<field name="map_sheet_id"/>
+				</field>
+				<field name="inv_ref" position="replace">
+					<field name="inv_ref" />
+				</field>
+				</data>
+			</field>
+		</record>
+ 
+		<!-- new view -->
+
+		<!-- Mapsheep Foi de parcurs-->
+		<record id='fleet_map_sheet_form' model='ir.ui.view' >
+			<field name="name">fleet.map.sheet.form</field>
+			<field name="model">fleet.map.sheet</field>
+			<field name="arch" type="xml">
+				<form string="Map Sheet" >
+					<header>
+						<button name="action_open" type="object" states="draft" string="Confirm"/>
+						<button name="action_done" type="object" states="open" string="Done"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"draft":"red","open":"black", "done":"gray"}'/>
+					</header>
+					<sheet>
+						<h1>
+							<label string="Map Sheet"/>
+							<field name="name"  class="oe_inline"/>
+						</h1>
+						<group col="2">
+							<group>
+								<field name="date" />  
+								<field name="distance_total"/>
+								<field name="amount_total" widget='monetary' />
+								<field name="liter_total" />
+								<field name="norm_cons" />
+								<field name="company_id" groups="base.group_multi_company"/>
+							</group>
+							<group >
+								<field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+								<field name="category_id"/>
+								<field name="driver_id" />
+								<field name="driver2_id" />
+								<field name="avg_cons" />
+							</group>
+							<group>
+								<field name="date_start_old" invisible="1"/>
+								<field name="date_start" on_change="on_change_date_start(date_start, date_end, date_start_old, route_log_ids)" />
+								<field name="odometer_start"/>
+								<field name="reservoir_level_start"/>
+							</group>
+							<group>
+								<field name="date_end"/>
+								<field name="odometer_end"/>
+								<field name="reservoir_level_end"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Route Log">
+								<button name="action_get_route_log" states="draft,open" string="Get route log" type="object" class="oe_edit_only oe_link"/>
+								<field name="route_log_ids" nolabel="1"
+								on_change="on_change_route_log(route_log_ids, date_start, date_end)"
+								context="{'vehicle_id': vehicle_id, 'date': date_start, 'route_log_ids':route_log_ids }" >
+									<tree editable="bottom"   colors="red:week_day in (0,6)" >
+										<field name="vehicle_id" invisible="1"/>
+										<field name="state" invisible="1" />
+										<field name="week_day" invisible="1"/>
+										<field name="date_begin" on_change="on_change_route(route_id,distance, date_begin)"/>
+										<field name="date_end" />
+										<field name="scope_id" widget="selection" />
+										<field name="route_id" on_change="on_change_route(route_id,distance, date_begin)"/>
+										<field name="distance" sum="Total Distance"   />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<notebook>
+							<page string="Fuel Logs">
+								<button name="action_get_log_fuel" states="draft,open" string="Get fuel log" type="object" class="oe_edit_only oe_link"/>
+								<field name="log_fuel_ids" nolabel="1"  context="{'vehicle_id': vehicle_id}" >
+									<tree editable="bottom">
+										<field name="vehicle_id" invisible="1"/>
+										<field name="date_time"/>
+										<field name="inv_ref"/>
+										<field name="full"/>
+										<field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)" sum = "Total Liter"/>
+										<field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" avg="Average Price" />
+										<field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)" sum = "Total Amount"/>
+									</tree>
+								</field>
+								<!--
+								<group class="oe_subtotal_footer oe_right">
+								<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="amount_total"/>
+								<button name="button_dummy"
+								states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+								</div>
+								<field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+								</group>
+								<div class="oe_clear"/>
+								-->
+							</page>
+						</notebook>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id='fleet_map_sheet_tree' model='ir.ui.view' >
+			<field name="name">fleet.map.sheet.tree</field>
+			<field name="model">fleet.map.sheet</field>
+			<field name="arch" type="xml">
+				<tree string="Map Sheet" colors="blue:state in ('draft');black:state in ('open');gray:state in ('done') " >
+					<field name="name" />
+					<field name="state" />
+					<field name="date" />
+					<field name="vehicle_id" />
+					<field name="driver_id" />
+					<field name="category_id"/>
+					<field name="distance_total" sum="Total Odometer" />
+					<field name="liter_total" sum="Total liter"/>
+					<field name="norm_cons" sum="Total Normal Consumption"/>
+					<field name="reservoir_level_start"/>
+					<field name="reservoir_level_end"/>
+				</tree>
+			</field>
+		</record>
+		<record id="fleet_map_sheet_gantt" model="ir.ui.view">
+			<field name="name">fleet.map.sheet.gantt</field>
+			<field name="model">fleet.map.sheet</field>
+			<field name="arch" type="xml">
+				<gantt date_start="date_start" date_stop="date_end" mode="week" string="Map Sheet" default_group_by="vehicle_id" ></gantt>
+			</field>
+		</record>
+		<record id="fleet_map_sheet_calendar" model="ir.ui.view">
+			<field name="name">fleet.map.sheet.calendar</field>
+			<field name="model">fleet.map.sheet</field>
+			<field name="arch" type="xml">
+				<calendar date_start="date_start" date_stop="date_end" mode="week" string="Map Sheet">
+					<field name="name"/>
+					<field name="vehicle_id" />
+				</calendar>
+			</field>
+		</record>
+		<record id="fleet_map_sheet_graph" model="ir.ui.view" >
+			<field name="name">fleet.map.sheet.graph</field>
+			<field name="model">fleet.map.sheet</field>
+			<field name="arch" type="xml">
+				<graph string="Map Sheets" type="bar">
+					<field name="vehicle_id"/>
+					<field name="distance_total" operator="+"/>
+					<field name="liter_total" operator="+"/>
+				</graph>
+			</field>
+		</record>
+		<record id='fleet_map_sheet_search' model='ir.ui.view' >
+			<field name="name">fleet.map.sheet.search</field>
+			<field name="model">fleet.map.sheet</field>
+			<field name="arch" type="xml">
+				<search string="Map Sheet" >
+					<field name="vehicle_id" />
+					<field name="date"/>
+					<group expand="1" string="Group By...">
+						<filter name="groupby_date" context="{'group_by' : 'date'}" string="Date"/>
+						<filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		<record id='fleet_map_sheet_act' model='ir.actions.act_window' >
+			<field name="name">Map Sheets</field>
+			<field name="res_model">fleet.map.sheet</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,gantt,calendar,graph</field>
+			<!--	<field name="context">{"search_default_groupby_date": True,  "search_default_groupby_vehicle_id" : True,}</field> -->
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Click to create a new map sheet.</p>
+				<p>Here you can add map sheet for all vehicles.</p>
+			</field>
+		</record>
+		<menuitem action="fleet_map_sheet_act" parent="fleet.fleet_vehicles" id="fleet_map_sheet_menu" groups="fleet.group_fleet_user"/>
+
+		<!-- Route Log -->
+		<record id='fleet_route_log_form' model='ir.ui.view' >
+			<field name="name">fleet.route.log.form</field>
+			<field name="model">fleet.route.log</field>
+			<field name="arch" type="xml">
+				<form string="Route Logs" version="7.0">
+					<header>
+						<field name="state" widget="statusbar"/>
+					</header>
+					<sheet>
+						<h1>
+							<label string="Route Log"/>
+						</h1>
+						<group>
+							<field name="vehicle_id" />
+							<field name="date_begin" />
+							<field name="date_end" />
+							<field name="route_id" on_change="on_change_route(route_id,distance, date_begin)"/>
+							<field name="distance" sum="Total Distance"   />
+							<field name="norm_cons" sum="Total Normal Consumption"/>
+							<field name="map_sheet_id" context="{'vehicle_id':vehicle_id, 'date':date_begin}"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id='fleet_route_log_tree' model='ir.ui.view' >
+			<field name="name">fleet.route.log.tree</field>
+			<field name="model">fleet.route.log</field>
+			<field name="arch" type="xml">
+				<tree string="Route Logs">
+					<field name="vehicle_id" />
+					<field name="state"/>
+					<field name="date_begin" />
+					<field name="date_end" />
+					<field name="route_id" on_change="on_change_route(route_id,distance, date_begin)"/>
+					<field name="distance" sum="Total Distance"   />
+					<field name="norm_cons" sum="Total Normal Consumption"/>
+					<field name="map_sheet_id" context="{'vehicle_id':vehicle_id, 'date':date_begin}"/>
+				</tree>
+			</field>
+		</record>
+		<record id="fleet_route_log_gantt" model="ir.ui.view">
+			<field name="name">fleet.route.log.gantt</field>
+			<field name="model">fleet.route.log</field>
+			<field name="arch" type="xml">
+				<gantt date_start="date_begin" date_stop="date_end" mode="week" string="Route Logs" default_group_by="vehicle_id" ></gantt>
+			</field>
+		</record>
+		<record id="fleet_route_log_calendar" model="ir.ui.view">
+			<field name="name">fleet.map.sheet.reoute.calendar</field>
+			<field name="model">fleet.route.log</field>
+			<field name="arch" type="xml">
+				<calendar date_start="date_begin" date_stop="date_end" mode="week" string="Route Log" >
+					<field name="vehicle_id" />
+					<field name="distance" />
+				</calendar>
+			</field>
+		</record>
+		<record id='fleet_route_log_search' model='ir.ui.view' >
+			<field name="name">fleet.route.log.search</field>
+			<field name="model">fleet.route.log</field>
+			<field name="arch" type="xml">
+				<search string="Route Log" >
+					<field name="vehicle_id" />
+					<group expand="1" string="Group By...">
+						<filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		<record id='fleet_route_log_act' model='ir.actions.act_window' >
+			<field name="name">Route Log</field>
+			<field name="res_model">fleet.route.log</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,gantt,calendar</field>
+			<field name="context">{ "search_default_groupby_vehicle_id" : True,}</field>
+		</record>
+		<menuitem action="fleet_route_log_act" parent="fleet.fleet_vehicles" id="fleet_route_log_menu" groups="fleet.group_fleet_user"/>
+		<menuitem name="Master data" parent="fleet.fleet_vehicles" id="fleet_masterdata_menu" groups="fleet.group_fleet_user" sequence = "99" />
+
+		<!-- Route -->
+		<record id='fleet_route_tree' model='ir.ui.view' >
+			<field name="name">fleet.route.tree</field>
+			<field name="model">fleet.route</field>
+			<field name="arch" type="xml">
+				<tree string="Route" editable="bottom">
+					<field name="from_loc_id" />
+					<field name="to_loc_id"/>
+					<field name="distance"/>
+					<field name="time" widget="float_time"/>
+				</tree>
+			</field>
+		</record>
+		<record id='fleet_route_form' model='ir.ui.view' >
+			<field name="name">fleet.route.form</field>
+			<field name="model">fleet.route</field>
+			<field name="arch" type="xml">
+				<form string="Route" >
+					<group col="6">
+					<field name="from_loc_id" />
+					<field name="to_loc_id"/>
+					<field name="distance"/>
+					<field name="time" widget="float_time"/>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id='fleet_route_act' model='ir.actions.act_window' >
+			<field name="name">Routes</field>
+			<field name="res_model">fleet.route</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Click to create a new route.</p>
+			</field>
+		</record>
+		<menuitem action="fleet_route_act" parent="fleet_masterdata_menu" id="fleet_route_menu" groups="fleet.group_fleet_user"/>
+
+		<!-- Location -->
+		<record id='fleet_location_tree' model='ir.ui.view' >
+			<field name="name">fleet.location.tree</field>
+			<field name="model">fleet.location</field>
+			<field name="arch" type="xml">
+				<tree string="Location" editable="bottom">
+					<field name="name" />
+					<field name="type"/>
+				</tree>
+			</field>
+		</record>
+		<record id='fleet_location_form' model='ir.ui.view' >
+			<field name="name">fleet.location.form</field>
+			<field name="model">fleet.location</field>
+			<field name="arch" type="xml">
+				<form string="Location">
+					<group  >
+					<field name="name" />
+					<field name="type"/>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id='fleet_location_act' model='ir.actions.act_window' >
+			<field name="name">Locations</field>
+			<field name="res_model">fleet.location</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Click to create a new location.</p>
+			</field>
+		</record>
+		<menuitem action="fleet_location_act" parent="fleet_masterdata_menu" id="fleet_locations_menu" groups="fleet.group_fleet_user"/>
+
+		<!-- Fuel -->
+		<record id='fleet_fuel_tree' model='ir.ui.view' >
+			<field name="name">fleet.fuel.tree</field>
+			<field name="model">fleet.fuel</field>
+			<field name="arch" type="xml">
+				<tree string="Fuel" editable="bottom">
+					<field name="name" />
+					<field name="fuel_type"/>
+				</tree>
+			</field>
+		</record>
+		<record model='ir.actions.act_window' id='fleet_fuel_act'>
+			<field name="name">Fuels</field>
+			<field name="res_model">fleet.fuel</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="fleet_fuel_act" parent="fleet_masterdata_menu" id="fleet_fuel_menu" groups="fleet.group_fleet_user"/>
+
+		<!-- Scope -->
+		<record id='fleet_scope_tree' model='ir.ui.view' >
+			<field name="name">fleet.scope.tree</field>
+			<field name="model">fleet.scope</field>
+			<field name="arch" type="xml">
+				<tree string="Scope" editable="bottom">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		<record id='fleet_scope_act' model='ir.actions.act_window' >
+			<field name="name">Scope</field>
+			<field name="res_model">fleet.scope</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="fleet_scope_act" parent="fleet_masterdata_menu" id="fleet_scope_menu" groups="fleet.group_fleet_user"/>
+
+		<!-- Category -->
+		<record id='fleet_vehicle_category_tree' model='ir.ui.view' >
+			<field name="name">fleet.vehicle.category.tree</field>
+			<field name="model">fleet.vehicle.category</field>
+			<field name="arch" type="xml">
+				<tree string="Category" editable="bottom">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		<record id='fleet_vehicle_category_act' model='ir.actions.act_window' >
+			<field name="name">Vehicle Category</field>
+			<field name="res_model">fleet.vehicle.category</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="fleet_vehicle_category_act" parent="fleet.fleet_configuration" id="fleet_vehicle_category_menu" groups="fleet.group_fleet_user"/>
+
+		<!-- Cards -->
+		<record id='fleet_card_tree' model='ir.ui.view' >
+			<field name="name">fleet.card.tree</field>
+			<field name="model">fleet.card</field>
+			<field name="arch" type="xml">
+				<tree string="Cards" editable="bottom">
+					<field name="name" />
+					<field name="type_card"/>
+					<field name="vehicle_ids"  widget="many2many_tags" />
+				</tree>
+			</field>
+		</record>
+		<record id='fleet_card_form' model='ir.ui.view' >
+			<field name="name">fleet.card.form</field>
+			<field name="model">fleet.card</field>
+			<field name="arch" type="xml">
+				<form string="Cards" version="7.0">
+					<sheet>
+						<group >
+							<field name="name" />
+							<field name="type_card"/>
+							<field name="active"/>
+							<newline/>
+							<field name="vehicle_ids" widget="many2many_list" mode="tree">
+								<tree string="Vehicles">
+									<field name="name"/>
+								</tree>
+							</field>
+							<field name="log_fuel_ids" widget="many2many_list" mode="tree">
+								<tree string="Fuel log">
+									<field name="name"/>
+									<field name="liter" sum="Total liters"/>
+								</tree>
+							</field>
+						</group >
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id='fleet_card_act' model='ir.actions.act_window' >
+			<field name="name">Card</field>
+			<field name="res_model">fleet.card</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="fleet_card_act" parent="fleet_masterdata_menu" id="fleet_card_menu" groups="fleet.group_fleet_user"/>
+
+		<!-- Configuration -->
+		<!-- Category -->
+		<record id='fleet_vehicle_category_tree' model='ir.ui.view' >
+			<field name="name">fleet.vehicle.category.tree</field>
+			<field name="model">fleet.vehicle.category</field>
+			<field name="arch" type="xml">
+				<tree string="Category" editable="bottom">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		<record id='fleet_vehicle_category_act' model='ir.actions.act_window' >
+			<field name="name">Vehicle Category</field>
+			<field name="res_model">fleet.vehicle.category</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem action="fleet_vehicle_category_act" parent="fleet.fleet_configuration" id="fleet_vehicle_category_menu" groups="fleet.group_fleet_user"/>
+
+	</data>
+</openerp>

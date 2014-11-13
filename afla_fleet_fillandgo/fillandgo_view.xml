@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<record model='ir.ui.view' id='fleet_fillandgo_tree'>
+			<field name="name">fleet.fillandgo</field>
+			<field name="model">fleet.fillandgo</field>
+			<field name="arch" type="xml">
+				<tree string="Fill and Go" editable="bottom">					
+					<field name="date" />
+					<field name="license_plate"/>
+					<field name="vehicle_id"/>
+					<field name="fule_id"/>
+					<field name="liter"/>
+					<field name="price_per_liter"/>
+					<field name="amount"/>
+					<field name="station"/>
+					<field name="card_id"/>
+					<field name="odometer"/>
+					<field name="inv_ref"/>
+				</tree>
+			</field>
+		</record>
+		<record model='ir.actions.act_window' id='fleet_fillandgo_act'>
+			<field name="name">Fill and Go</field>
+			<field name="res_model">fleet.fillandgo</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem action="fleet_fillandgo_act" parent="fleet.fleet_vehicles" id="fleet_fillandgo_menu" groups="fleet.group_fleet_user"/>
+
+	</data>
+</openerp>

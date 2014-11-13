@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- inherit view -->
+
+		<record id="fleet_location_form" model="ir.ui.view">
+			<field name="name">fleet.location.form</field>
+			<field name="model">fleet.location</field>
+			<field name="inherit_id" ref="alfa_fleet.fleet_location_form"/>
+			<field name="arch" type="xml">
+				<data>
+					<field name="type" position="after">
+						<field name="lat"/>
+						<field name="lng"/>
+						<button name="action_get_lat_lng" type="object"  string="Get Lat Lng"/>
+					</field>
+					<group position="after">
+						<widget type="gmap_marker" lat="lat" lng="lng"/>
+					</group>
+				</data>
+			</field>
+		</record>
+		<record id='fleet_route_form' model='ir.ui.view' >
+			<field name="name">fleet.route.form</field>
+			<field name="model">fleet.route</field>
+			<field name="inherit_id" ref="alfa_fleet.fleet_route_form"/>
+			<field name="arch" type="xml">
+
+				<data>
+					<field name="from_loc_id" position="after">
+						
+							<field name="from_lat"/>
+							<field name="from_lng"/>
+						 
+					</field>
+					<field name="to_loc_id" position="after">
+						 
+							<field name="to_lat"/>
+							<field name="to_lng"/>
+						 
+					</field>
+					<group position="after">
+					   <button name="action_get_distance_duration" type="object"  string="Get Distance Duration"/>
+					   <widget type="gmap_route" from_lat="from_lat" from_lng="from_lng" 
+                                                 to_lat="to_lat" to_lng="to_lng" />
+					</group>
+				</data>
+
+			</field>
+		</record>
+
+	</data>
+</openerp>
