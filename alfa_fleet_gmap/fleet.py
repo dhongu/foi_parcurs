@@ -63,6 +63,19 @@ def fetch_json(query_url, params={}, headers={}):
     return (url, json.load(response))
 
 
+def get_url(url):
+    """Return a string of a get url query"""
+    try:
+        import urllib
+        objfile = urllib.urlopen(url)
+        rawfile = objfile.read()
+        objfile.close()
+        return rawfile
+    except ImportError:
+        raise osv.except_osv('Error !', 'Unable to import urllib !')
+    except IOError:
+        raise osv.except_osv('Error !', 'Web Service does not exist !')
+
 class GoogleMaps(object):
     _DIRECTIONS_QUERY_URL = 'http://maps.googleapis.com/maps/api/directions/json?'
 
@@ -115,26 +128,20 @@ class fleet_location(osv.osv):
     _columns = {
         'lat': fields.float('Latitude', digits=(9, 6)),
         'lng': fields.float('Longitude', digits=(9, 6)),
-        
+        'radius':fields.float('Radius'),                  # raza in km sau metri    
     }     
 
-    def get_url(self, url):
-        """Return a string of a get url query"""
-        try:
-            import urllib
-            objfile = urllib.urlopen(url)
-            rawfile = objfile.read()
-            objfile.close()
-            return rawfile
-        except ImportError:
-            raise osv.except_osv('Error !', self.MOD_NAME+'Unable to import urllib !')
-        except IOError:
-            raise osv.except_osv('Error !', self.MOD_NAME+'Web Service does not exist !')
+
+    _defaults = {
+        'radius': 1.0,  
+    }
+
+ 
 
     def action_get_lat_lng(self, cr, uid, ids, context=None):
         for loc in self.browse(cr, uid, ids, context=context):
             url = 'http://maps.googleapis.com/maps/api/geocode/xml?address=' + loc.name
-            rawfile = self.get_url(url)
+            rawfile = get_url(url)
             dom = etree.fromstring(rawfile)
             try:
                 lat = dom.xpath('//location/lat')[0].text
@@ -144,17 +151,18 @@ class fleet_location(osv.osv):
                 raise osv.except_osv('Error !', 'Unable to get location !')
         return
 
-fleet_location()
+ 
 
 
 class fleet_route(osv.osv):
     _inherit = 'fleet.route'
     _columns = {
-       'from_lat': fields.related( 'from_loc_id',   'lat',  type="float",   string="Latitude from" ),
-       'from_lng': fields.related( 'from_loc_id',   'lng',  type="float",   string="Longitude from" ),
-       'to_lat': fields.related( 'to_loc_id',   'lat',  type="float",   string="Latitude from" ),
-       'to_lng': fields.related( 'to_loc_id',   'lng',  type="float",   string="Longitude from" ),
-       #todo: add via 
+       'from_lat': fields.related( 'from_loc_id',   'lat',  type="float",  digits=(9, 6),  string="Latitude from" ),
+       'from_lng': fields.related( 'from_loc_id',   'lng',  type="float",  digits=(9, 6),  string="Longitude from" ),
+       'to_lat': fields.related( 'to_loc_id',   'lat',  type="float",   digits=(9, 6), string="Latitude from" ),
+       'to_lng': fields.related( 'to_loc_id',   'lng',  type="float",   digits=(9, 6), string="Longitude from" ),
+       #todo: add via  in care sa fie mai multe puncte
+       # de adaugat un KML
     }   
     
     def action_get_distance_duration(self,cr, uid, ids, context=None):   
@@ -162,19 +170,27 @@ class fleet_route(osv.osv):
             
             url = 'http://maps.googleapis.com/maps/api/directions/xml?'
             params = {
-                'origin': route.from_lat_id.name,
-                'destination': route.to_lat_id.name,
+                'origin': route.from_loc_id.name,
+                'destination': route.to_loc_id.name,
                 'sensor': 'false',
                 'mode': 'driving',
             }
+            if route.from_lat and route.from_lng:
+                params['origin'] =  str(route.from_lat)+','+str(route.from_lng)
+            if route.to_lat and route.to_lng:
+                params['destination'] =  str(route.to_lat)+','+str(route.to_lng) 
+                           
             encoded_params = urllib.urlencode(params)    
             url = url + encoded_params
-            rawfile = self.get_url(url)
+            rawfile = get_url(url)
             dom = etree.fromstring(rawfile)
-            duration = dom.xpath('//routes/legs/duration')[0].text
-            distance = dom.xpath('//routes/legs/distance')[0].text
+            status = dom.xpath('//DirectionsResponse/status')[0].text
+            if status == 'OK':
+                duration = float(dom.xpath('/DirectionsResponse/route/leg/duration/value')[0].text)/60/60
+                distance = float(dom.xpath('/DirectionsResponse/route/leg/distance/value')[0].text)/1000
+                self.write(cr, uid, route.id, {'duration':duration,'distance':distance})
         return 
     
-fleet_route()
+ 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

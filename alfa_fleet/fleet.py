@@ -723,7 +723,7 @@ class fleet_route_log(osv.osv):
         date_int =  str_to_datetime(date_begin)
         week_day = int(date_int.strftime('%w'))
         date_end = date_int  # datetime.strptime(date_begin,tools.DEFAULT_SERVER_DATETIME_FORMAT) 
-        date_end = date_end + timedelta(hours=int(math.floor(route.time)), minutes=int((route.time%1) * 60) )
+        date_end = date_end + timedelta(hours=int(math.floor(route.duration)), minutes=int((route.duration%1) * 60) )
         date_end = datetime_to_str(date_end)    # datetime.strftime(date_end,tools.DEFAULT_SERVER_DATETIME_FORMAT)
        
         return {
@@ -746,7 +746,6 @@ class fleet_route_log(osv.osv):
 
  
 
-fleet_route_log()
 
 
 class fleet_route(osv.osv):
@@ -764,9 +763,9 @@ class fleet_route(osv.osv):
         'from_loc_id':  fields.many2one('fleet.location', 'From', help='From location', required=True),
         'to_loc_id':    fields.many2one('fleet.location', 'To',   help='To location', required=True),
         'distance':     fields.float('Distance'),  
-        'time':         fields.float('Time'),      
+        'duration':     fields.float('Duration'),      
     }    
-fleet_route()
+
 
 class fleet_location(osv.osv):
     'Pozitia unei locatii si afisare pozitie pe Google Maps'
@@ -779,7 +778,9 @@ class fleet_location(osv.osv):
     _defaults = {
         'type': 0,  
     }
-fleet_location()
+
+
+
 
 """
 class fleet_location_type(osv.osv):

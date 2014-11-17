@@ -348,7 +348,7 @@
 					<field name="from_loc_id" />
 					<field name="to_loc_id"/>
 					<field name="distance"/>
-					<field name="time" widget="float_time"/>
+					<field name="duration" widget="float_time"/>
 				</tree>
 			</field>
 		</record>
@@ -361,7 +361,7 @@
 					<field name="from_loc_id" />
 					<field name="to_loc_id"/>
 					<field name="distance"/>
-					<field name="time" widget="float_time"/>
+					<field name="duration" widget="float_time"/>
 					</group>
 				</form>
 			</field>
