@@ -12,6 +12,6 @@
 
 
 /* Button style */
-.openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_geoengine:after {
+.openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_gmaps:after {
     content: "2";
 }

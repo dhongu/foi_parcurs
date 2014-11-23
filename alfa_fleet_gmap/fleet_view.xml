@@ -7,48 +7,97 @@
 		<record id="fleet_location_form" model="ir.ui.view">
 			<field name="name">fleet.location.form</field>
 			<field name="model">fleet.location</field>
-			<field name="inherit_id" ref="alfa_fleet.fleet_location_form"/>
+			<field name="inherit_id" ref="alfa_fleet.fleet_location_form" />
 			<field name="arch" type="xml">
 				<data>
 					<field name="type" position="after">
-						<field name="lat"/>
-						<field name="lng"/>
-						<button name="action_get_lat_lng" type="object"  string="Get Lat Lng"/>
+						<field name="lat" />
+						<field name="lng" />
+						<button name="action_get_lat_lng" type="object" string="Get Lat Lng" />
 					</field>
 					<group position="after">
-						<widget type="gmap_marker" lat="lat" lng="lng"/>
+						<widget type="gmap_marker" lat="lat" lng="lng" />
 					</group>
 				</data>
 			</field>
 		</record>
-		<record id='fleet_route_form' model='ir.ui.view' >
+
+		<record id='fleet_location_gmap' model='ir.ui.view'>
+			<field name="name">fleet.location.gmap</field>
+			<field name="model">fleet.location</field>
+			<field name="type">gmaps</field>
+			<field name="arch" type="xml">
+				<field name="lat" />
+				<field name="lng" />
+				<widget type="gmap_marker" lat="lat" lng="lng" />
+			</field>
+		</record>
+
+
+
+		<record id='fleet_route_form' model='ir.ui.view'>
 			<field name="name">fleet.route.form</field>
 			<field name="model">fleet.route</field>
-			<field name="inherit_id" ref="alfa_fleet.fleet_route_form"/>
+			<field name="inherit_id" ref="alfa_fleet.fleet_route_form" />
 			<field name="arch" type="xml">
 
 				<data>
 					<field name="from_loc_id" position="after">
-						
-							<field name="from_lat"/>
-							<field name="from_lng"/>
-						 
+
+						<field name="from_lat" />
+						<field name="from_lng" />
+
 					</field>
 					<field name="to_loc_id" position="after">
-						 
-							<field name="to_lat"/>
-							<field name="to_lng"/>
-						 
+
+						<field name="to_lat" />
+						<field name="to_lng" />
+
 					</field>
 					<group position="after">
-					   <button name="action_get_distance_duration" type="object"  string="Get Distance Duration"/>
-					   <widget type="gmap_route" from_lat="from_lat" from_lng="from_lng" 
-                                                 to_lat="to_lat" to_lng="to_lng" />
+						<button name="action_get_distance_duration" type="object"
+							string="Get Distance Duration" />
+						<widget type="gmap_route" from_lat="from_lat" from_lng="from_lng" to_lat="to_lat" to_lng="to_lng" />
 					</group>
 				</data>
 
 			</field>
 		</record>
 
+		<record id='fleet_route_gmap' model='ir.ui.view'>
+			<field name="name">fleet.route.gmap</field>
+			<field name="model">fleet.route</field>
+			<field name="type">gmaps</field>
+			<field name="arch" type="xml">
+				<field name="from_lat" />
+				<field name="from_lng" />
+				<field name="to_lat" />
+				<field name="to_lng" />
+				<widget type="gmap_route" from_lat="from_lat" from_lng="from_lng" to_lat="to_lat" to_lng="to_lng" />
+			</field>
+		</record>
+
+
+		
+		<record id='fleet_route_act' model='ir.actions.act_window' >
+			<field name="name">Routes</field>
+			<field name="res_model">fleet.route</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,gmaps</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Click to create a new route.</p>
+			</field>
+		</record>
+		
+		<record id='fleet_location_act' model='ir.actions.act_window' >
+			<field name="name">Locations</field>
+			<field name="res_model">fleet.location</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Click to create a new location.</p>
+			</field>
+		</record>
+		 
 	</data>
 </openerp>

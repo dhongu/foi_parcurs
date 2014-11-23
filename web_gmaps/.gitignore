@@ -7,3 +7,4 @@
 .project
 .settings/
 *.pydevproject
+/__init__.pyc

@@ -9,20 +9,28 @@ openerp.web_gmaps = function (instance) {
         template: "gmap_marker",
         init: function (view, code) {
             this._super(view, code);
-
-            var field_lat = code.attrs.lat;
-            var field_lng = code.attrs.lng;
-            
-            this.set({'field_lat':field_lat, 'field_lng':field_lng});
-
+            this.field_lat = code.attrs.lat;
+            this.field_lng = code.attrs.lng;       
         },
-        
-        initialize: function() {
-            var field_lat = this.get('field_lat');
-            var field_lng = this.get('field_lng');  
-            var lat = this.field_manager.get_field_value(field_lat);
-            var lng = this.field_manager.get_field_value(field_lng); 
-            
+          
+        start: function() {
+            if (typeof google== 'undefined') {
+                window.ginit = this.on_ready;
+                $.getScript('http://maps.googleapis.com/maps/api/js?sensor=false&callback=ginit');        	 
+            }
+            else {
+           	 this.on_ready();
+            } 
+           var self = this;
+           self.on("change:effective_readonly", self, function() {
+               self.marker.setDraggable(self.get("effective_readonly") ? false : true);
+           });
+        },
+
+        on_ready: function(){
+            var lat = this.field_manager.get_field_value(this.field_lat);
+            var lng = this.field_manager.get_field_value(this.field_lng);  
+
             var myLatlng = new google.maps.LatLng(lat, lng);
             var mapOptions = {
                 zoom: 8,
@@ -30,11 +38,10 @@ openerp.web_gmaps = function (instance) {
             };
             
             var div_gmap = this.$el[0];
-              
-
+            
             map = new google.maps.Map(div_gmap, mapOptions);
 
-            var marker = new google.maps.Marker({
+            this.marker = new google.maps.Marker({
                 position: myLatlng,
                 map: map,
                 draggable:false,
@@ -42,49 +49,30 @@ openerp.web_gmaps = function (instance) {
              
             var my_self= this;  
             
-            google.maps.event.addListener(marker, 'dragend',function(NewPoint){
+            google.maps.event.addListener(this.marker, 'dragend',function(NewPoint){
                   lat = NewPoint.latLng.lat();
                   lng = NewPoint.latLng.lng();
                   my_self.update_latlng(lat,lng);
                });
                
-            this.set({"map": map,"marker":marker});
             
-            this.field_manager.on("field_changed:"+field_lat, this, this.display_result);
-            this.field_manager.on("field_changed:"+field_lng, this, this.display_result);
+            this.field_manager.on("field_changed:"+this.field_lat, this, this.display_result);
+            this.field_manager.on("field_changed:"+this.field_lng, this, this.display_result);        	
         },
-
-        start: function() {
-           this.initialize(); 
-           var self = this;
-           self.on("change:effective_readonly", self, function() {
-               marker =  self.get('marker');
-               marker.setDraggable(self.get("effective_readonly") ? false : true);
-           });
-        },
-        
 
         update_latlng: function(lat, lng ){
-           var values = {};
-           var field_lat = this.get('field_lat');
-           var field_lng = this.get('field_lng');  
-           values[field_lat] = lat;
-           values[field_lng] = lng; 
-           this.field_manager.set_values(values).done(function() { });             
+            var values = {};
+            values[this.field_lat] = lat;
+            values[this.field_lng] = lng; 
+            this.field_manager.set_values(values).done(function() { });             
         },
 
         display_result: function() {
-          var field_lat = this.get('field_lat');
-          var field_lng = this.get('field_lng');  
-          var lat = this.field_manager.get_field_value(field_lat);
-          var lng = this.field_manager.get_field_value(field_lng);
-          map = this.get('map');
-          
-          var myLatlng = new google.maps.LatLng(lat, lng);
-          
-          map.setCenter(myLatlng);  
-          marker = this.get('marker');
-          marker.setPosition(myLatlng);  
+            var lat = this.field_manager.get_field_value(this.field_lat);
+            var lng = this.field_manager.get_field_value(this.field_lng);  
+            var myLatlng = new google.maps.LatLng(lat, lng);
+            map.setCenter(myLatlng);  
+            this.marker.setPosition(myLatlng); 
         },
         
 
@@ -99,31 +87,33 @@ openerp.web_gmaps = function (instance) {
 
         init: function (view, code) {
             this._super(view, code);
-            var field_from_lat = code.attrs.from_lat;
-            var field_from_lng = code.attrs.from_lng;
-            var field_to_lat = code.attrs.to_lat;
-            var field_to_lng = code.attrs.to_lng; 
+            this.field_from_lat = code.attrs.from_lat;
+            this.field_from_lng = code.attrs.from_lng;
+            this.field_to_lat = code.attrs.to_lat;
+            this.field_to_lng = code.attrs.to_lng; 
             
-            var field_distance = code.attrs.distance; 
-            var field_duration = code.attrs.duration; 
+            this.field_distance = code.attrs.distance; 
+            this.field_duration = code.attrs.duration;  
             
-            this.set({'field_from_lat':field_from_lat, 'field_from_lng':field_from_lng, 
-                      'field_to_lat':field_to_lat, 'field_to_lng':field_to_lng,
-                      'field_distance':field_distance,
-                      'field_duration':field_duration}); 
-            
-
-        },        
+        },       
+        
         start: function () {
+            if (typeof google== 'undefined') {
+                window.ginit = this.on_ready;
+                $.getScript('http://maps.googleapis.com/maps/api/js?&sensor=false&callback=ginit');        	 
+            }
+            else {
+           	 this.on_ready();
+            }
+
+        },
+        
+        on_ready: function(){
             var self = this;
-            field_from_lat = this.get('field_from_lat');
-            field_from_lng =  this.get('field_from_lng');
-            field_to_lat =  this.get('field_to_lat');
-            field_to_lng = this.get('field_to_lng');
-            var from_lat = this.field_manager.get_field_value(field_from_lat);
-            var from_lng = this.field_manager.get_field_value(field_from_lng); 
-            var to_lat = this.field_manager.get_field_value(field_to_lat);
-            var to_lng = this.field_manager.get_field_value(field_to_lng);
+            var from_lat = this.field_manager.get_field_value(this.field_from_lat);
+            var from_lng = this.field_manager.get_field_value(this.field_from_lng); 
+            var to_lat = this.field_manager.get_field_value(this.field_to_lat);
+            var to_lng = this.field_manager.get_field_value(this.field_to_lng);
                                   
             var div_gmap = this.$el[0];
                         
@@ -137,48 +127,45 @@ openerp.web_gmaps = function (instance) {
             
             map = new google.maps.Map(div_gmap,mapOptions);
             
-            var directionsService = new google.maps.DirectionsService();
-            var directionsDisplay = new google.maps.DirectionsRenderer();
-            directionsDisplay.setMap(map);
+            this.directionsService = new google.maps.DirectionsService();
             
-            this.set({"map": map,'directionsDisplay':directionsDisplay, 'directionsService':directionsService}); 
- 
- 
-            this.field_manager.on("field_changed:"+field_from_lat, this, this.display_result);
-            this.field_manager.on("field_changed:"+field_from_lng, this, this.display_result);     
-            this.field_manager.on("field_changed:"+field_to_lat, this, this.display_result);
-            this.field_manager.on("field_changed:"+field_to_lng, this, this.display_result);            
+            this.directionsDisplay = new google.maps.DirectionsRenderer();
+            this.directionsDisplay.setMap(map);
+            
+
+            this.field_manager.on("field_changed:"+this.field_from_lat, this, this.display_result);
+            this.field_manager.on("field_changed:"+this.field_from_lng, this, this.display_result);     
+            this.field_manager.on("field_changed:"+this.field_to_lat, this, this.display_result);
+            this.field_manager.on("field_changed:"+this.field_to_lng, this, this.display_result);            
     
            self.on("change:effective_readonly", self, function() {
                var rendererOptions = {
                   draggable: self.get("effective_readonly") ? false : true
                };              
-               directionsDisplay.setOptions(rendererOptions);
+               self.directionsDisplay.setOptions(rendererOptions);
            }); 
            
-           google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
+           google.maps.event.addListener(self.directionsDisplay, 'directions_changed', function() {
                 if (!self.get("effective_readonly")){
-                      self.computeTotal(directionsDisplay.getDirections());
+                      self.computeTotal(self.directionsDisplay.getDirections());
                   }
                 
               });
            
            this.display_result(); 
-           this.updating = false;    
+           this.updating = false;            	
         },
-
 
         display_result: function() {
             
             if (this.updating) return;
             var self = this;
             
-            var directionsDisplay = this.get('directionsDisplay');
-            var directionsService = this.get('directionsService');
-            var from_lat = this.field_manager.get_field_value(this.get('field_from_lat'));
-            var from_lng = this.field_manager.get_field_value(this.get('field_from_lng')); 
-            var to_lat = this.field_manager.get_field_value(this.get('field_to_lat'));
-            var to_lng = this.field_manager.get_field_value(this.get('field_to_lng'));  
+
+            var from_lat = this.field_manager.get_field_value(this.field_from_lat);
+            var from_lng = this.field_manager.get_field_value(this.field_from_lng); 
+            var to_lat = this.field_manager.get_field_value(this.field_to_lat);
+            var to_lng = this.field_manager.get_field_value(this.field_to_lng);  
             
             if (from_lat==0 | from_lng==0 | to_lat==0 | to_lng==0)
                 return;
@@ -189,9 +176,9 @@ openerp.web_gmaps = function (instance) {
                   destination:to_Latlng,
                   travelMode: google.maps.TravelMode.DRIVING
             };
-            directionsService.route(request, function(response, status) {
+            self.directionsService.route(request, function(response, status) {
                 if (status == google.maps.DirectionsStatus.OK) {
-                  directionsDisplay.setDirections(response);
+                  self.directionsDisplay.setDirections(response);
                   if (!self.get("effective_readonly")){
                       self.computeTotal(response);
                   }
@@ -213,27 +200,15 @@ openerp.web_gmaps = function (instance) {
           distance = distance / 1000.0;
           duration = duration / 60 / 60;
           var values = {};
+ 
+          values[this.field_distance] = distance;
+          values[this.field_duration] = duration; 
+ 
+          values[this.field_from_lat] = result.Lb.origin.lat();
+          values[this.field_from_lng] = result.Lb.origin.lng(); 
           
-          
-          
-          var field_distance = this.get('field_distance');
-          var field_duration = this.get('field_duration'); 
-          
-          values[field_distance] = distance;
-          values[field_duration] = duration; 
-                   
-          var field_from_lat = this.get('field_from_lat');
-          var field_from_lng =  this.get('field_from_lng');
-          var field_to_lat =  this.get('field_to_lat');
-          var field_to_lng = this.get('field_to_lng');
-          
-          
-             
-          values[field_from_lat] = result.Lb.origin.lat();
-          values[field_from_lng] = result.Lb.origin.lng(); 
-          
-          values[field_to_lat] = result.Lb.destination.lat();
-          values[field_to_lng] = result.Lb.destination.lng();
+          values[this.field_to_lat] = result.Lb.destination.lat();
+          values[this.field_to_lng] = result.Lb.destination.lng();
           
           this.updating = true;
           this.field_manager.set_values(values).done(function() { 
@@ -246,21 +221,137 @@ openerp.web_gmaps = function (instance) {
  });
  instance.web.form.custom_widgets.add('gmap_route', 'instance.web_gmaps.gmap_route');
 
-/*
- instance.web_gmaps.gmap_markers = instance.web.View.extend({
-    view_loading: function (fv) {
-            var attrs = fv.arch.attrs,
-            self = this;
-            this.fields_view = fv; 
-            this.$buttons =   "<div name='CalendarView.buttons' class='oe_calendar_buttons'>";
-        },
+ 
+ 
+	 
+instance.web.views.add('gmaps', 'instance.web_gmaps.gmaps');
+ 
+ 
+instance.web_gmaps.gmaps = instance.web.View.extend({
+
+     template: 'Gmaps',
+
+     init: function(parent, dataset, view_id, options) {
+         this._super(parent);
+         this.set_default_options(options);
+         this.view_manager = parent;
+         this.dataset = dataset;
+         this.dataset_index = 0;
+         this.model = this.dataset.model;
+         this.view_id = view_id;
+         this.view_type = 'gmaps';
+
+
+     },
+     
+
+ 
+     view_loading: function(data) {
+
+         var self = this;
+         this.fields_view = data;
+         
+         //_.each(data.geoengine_layers.actives, function(item) {
+         //    self.geometry_columns[item.geo_field_id[1]] = true;
+         //});
+         this.$el.html(QWeb.render("Gmaps", {"fields_view": this.fields_view, 'elem_id': this.elem_id}));
+
+         
+         if (typeof google== 'undefined') {
+             window.ginit = this.on_ready;
+             $.getScript('http://maps.googleapis.com/maps/api/js?&sensor=false&callback=ginit');        	 
+         }
+         else {
+        	 this.on_ready();
+         }
+     },
+
+     
+     on_ready: function() {
+ 
+
+    	 var myLatlng = new google.maps.LatLng(45, 25);
+         var mapOptions = {
+             zoom: 8,
+             center: myLatlng
+         };
+         
+         var div_gmap = this.$el[0];
+         
+         map = new google.maps.Map(div_gmap, mapOptions); 
+         
+         this.directionsService = new google.maps.DirectionsService();
+
+         
+         
+         var self = this;
+         self.dataset.read_slice(_.keys(self.fields_view.fields)).then(function(data){
+             _(data).each(self.do_load_record); 
+         }); 
+     },
+     
+     
+ 
+     do_load_record: function(record){
+    	 var self = this;
+    	 _(self.fields_view.arch.children).each(function(data){
+    		 self.do_add_item(data,record)
+    	 });
+     },
+
+     do_add_item: function(item,record){
+    	 var self = this;
+    	 if (item.tag == 'widget' && item.attrs.type == 'gmap_marker' ){
+
+        	 var myLatlng = new google.maps.LatLng(record[item.attrs.lat], record[item.attrs.lng]);
+             var marker = new google.maps.Marker({
+                 position: myLatlng,
+                 map: map,
+                 draggable:false,
+             });     		 
+    	 }
+    	 if (item.tag == 'widget' && item.attrs.type == 'gmap_route' ){
+
+             var from_lat = record[item.attrs.from_lat] 
+             var from_lng =  record[item.attrs.from_lng]
+             var to_lat =  record[item.attrs.to_lat]
+             var to_lng =   record[item.attrs.to_lng]
+             
+
+             var from_Latlng = new google.maps.LatLng(from_lat, from_lng);
+             var to_Latlng = new google.maps.LatLng(to_lat, to_lng);         
+             var request = {
+                   origin:from_Latlng,
+                   destination:to_Latlng,
+                   travelMode: google.maps.TravelMode.DRIVING
+             };
+             var directionsDisplay = new google.maps.DirectionsRenderer();
+             directionsDisplay.setMap(map);
+             self.directionsService.route(request, function(response, status) {
+                 if (status == google.maps.DirectionsStatus.OK) {
+                   directionsDisplay.setDirections(response);
+
+                 }
+             }); 
+    	 }    	 
+    	 
+  	 
+     },
+
  });
  
- instance.web.views.add('gmap_markers', 'instance.web_gmaps.gmap_markers');
+ 
+ 
+ 
+ 
 
 
-*/
+ 
 };
+
+
+
+
 
 
 
