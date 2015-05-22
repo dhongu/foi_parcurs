@@ -203,7 +203,7 @@ class fleet_map_sheet(models.Model):
                                       When the Map Sheet is closed, the status is set to 'Done'.")
        
 
-    log_fuel_ids = fields.One2many('fleet.vehicle.log.fuel','map_sheet_id', string='Fuel log', states={'done':[('readonly',True)]})
+    log_fuel_ids = fields.One2many('fleet.vehicle.log.fuel','map_sheet_id', string='Fuel log', states={'done':[('readonly',True)]}, copy=False)
     route_log_ids = fields.One2many('fleet.route.log','map_sheet_id', string='Route Logs', states={'done':[('readonly',True)]})
                       
     liter_total = fields.Float(compute='_compute_amount_all',   string='Total Liter', store=True, help="The total liters")
@@ -228,7 +228,7 @@ class fleet_map_sheet(models.Model):
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
         if self.date_start > self.date_end:
-            raise ValidationError("Map Sheet end-date must be greater then start-date")
+            raise ValidationError( _("Map Sheet end-date (%s) must be greater then start-date (%s)") % (self.date_end, self.date_start ) )
 
     
     def _conv_local_datetime_to_utc(self,cr, uid, date, context):
@@ -247,57 +247,77 @@ class fleet_map_sheet(models.Model):
     }
     """
     
-
-    def copy(self, cr, uid, id, default=None, context=None):
+    @api.multi
+    def copy(self,  default=None ):
         if not default:
             default = {}
             
-        record = self.browse(cr, uid, id, context=context)
+        record = self
 
-        date_start = datetime.strptime(record.date_start,tools.DEFAULT_SERVER_DATETIME_FORMAT) 
-        date_start = date_start + timedelta(days=1)
-        date_start = datetime.strftime(date_start,tools.DEFAULT_SERVER_DATETIME_FORMAT)
-
-        date_end = datetime.strptime(record.date_start,tools.DEFAULT_SERVER_DATETIME_FORMAT) 
-        date_end = date_end + timedelta(days=1)
-        date_end = datetime.strftime(date_end,tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        date_start = fields.Datetime.from_string(record.date_start) + timedelta(days=1)
+        date_start = fields.Datetime.to_string(date_start)
         
-        date = datetime.strptime(record.date,tools.DEFAULT_SERVER_DATE_FORMAT) 
-        date = date + timedelta(days=1)
-        date = datetime.strftime(date,tools.DEFAULT_SERVER_DATE_FORMAT)    
+        #date_start = datetime.strptime(record.date_start,tools.DEFAULT_SERVER_DATETIME_FORMAT) 
+        #date_start = date_start + timedelta(days=1)
+        #date_start = datetime.strftime(date_start,tools.DEFAULT_SERVER_DATETIME_FORMAT)
+
+
+        date_end = fields.Datetime.from_string(record.date_end) + timedelta(days=1)
+        date_end = fields.Datetime.to_string(date_end)
+        
+        
+        #date_end = datetime.strptime(record.date_start,tools.DEFAULT_SERVER_DATETIME_FORMAT) 
+        #date_end = date_end + timedelta(days=1)
+        #date_end = datetime.strftime(date_end,tools.DEFAULT_SERVER_DATETIME_FORMAT)
+
+
+        date = fields.Date.from_string(record.date) + timedelta(days=1)
+        date = fields.Date.to_string(date)
+                
+        #date = datetime.strptime(record.date,tools.DEFAULT_SERVER_DATE_FORMAT) 
+        #date = date + timedelta(days=1)
+        #date = datetime.strftime(date,tools.DEFAULT_SERVER_DATE_FORMAT)
+        
+            
         #TODO: de introdus pozitii si pentru rute cu data incrementata      
         default.update({
             'log_fuel_ids':[],
-            'name': self.pool.get('ir.sequence').next_by_code(cr, uid, 'fleet.map.sheet'),
+            'name': self.env['ir.sequence'].next_by_code( 'fleet.map.sheet'),
             'date': date,
             'date_start': date_start,
             'date_start': date_end,
         })
-        new_id = super(fleet_map_sheet, self).copy(cr, uid, id, default, context=context)
+        new_id = super(fleet_map_sheet, self).copy( default )
         return new_id
 
-
-    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
+    @api.multi
+    def on_change_vehicle(self, vehicle_id):
+        res = {}
         if not vehicle_id:
-            return {}        
-        vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context)                                 
-        return {
-            'value': {
-                'driver_id': vehicle.driver_id.id,
-                'driver2_id': vehicle.driver2_id.id,
-            }
-                
-        }
+            return res        
+        vehicle = self.env['fleet.vehicle'].browse(vehicle_id)                                 
+        if vehicle:
+            res = {
+                'value': {
+                    'driver_id': vehicle.driver_id.id,
+                    'driver2_id': vehicle.driver2_id.id,
+                    }
+                }    
+        return res
 
 
 
-    def on_change_date_start(self, cr, uid, ids, date_start,date_end, date_start_old, route_log_ids, context=None):
+    @api.multi
+    def on_change_date_start(self,  date_start, date_end, date_start_old, route_log_ids ):
         # se determina diferenta din dintre data veche si noua data !!                         
-        if len(ids) != 1:
+        if len(self.ids) != 1:
             return {}
         
+
+        
         if not date_start_old:
-            date_start_old   = self.read(cr, uid, ids, ['date_start'], context=context)[0]['date_start']
+            #date_start_old   = self.read(cr, uid, ids, ['date_start'], context=context)[0]['date_start']
+            date_start_old = self.date_start
         
         # map_sheet = self.browse(cr, uid, ids, context=context)[0]
         new_date_start_int = fields.Datetime.from_string(date_start)  
@@ -309,7 +329,7 @@ class fleet_map_sheet(models.Model):
         date_end = fields.Datetime.to_string(new_date_end_int + date_dif)   
           
 
-        route_log_list = self.resolve_2many_commands(cr, uid, 'route_log_ids', route_log_ids, ['id','date_begin','date_end'], context=context)
+        route_log_list = self.resolve_2many_commands( 'route_log_ids', route_log_ids, ['id','date_begin','date_end'])
         
         
         if len(route_log_ids) > 0:
@@ -324,13 +344,13 @@ class fleet_map_sheet(models.Model):
                     route_log_ids[i][0] = 1
        
         return {
-            'value': {'date_end':      date_end,
+            'value': {'date_end':       date_end,
                       'date_start_old': date_start, 
-                      'route_log_ids': route_log_ids}
+                      'route_log_ids':  route_log_ids}
         }
         
-        
-    def on_change_route_log(self, cr, uid, ids, route_log_ids, date_start, date_end, context=None):
+    @api.multi    
+    def on_change_route_log(self,   route_log_ids, date_start, date_end ):
         return {}
         if not route_log_ids: 
             return {}
@@ -354,71 +374,71 @@ class fleet_map_sheet(models.Model):
             }
         }
  
-    """    
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         
-        for map_sheet in self.browse(cr, uid, ids, context=context):
-            for fuel_log in map_sheet.log_fuel_ids:
-                self.pool.get('fleet.vehicle.log.fuel').write(cr,uid,fuel_log.id, {'vehicle_id':map_sheet.vehicle_id.id},context=context)
-            
-            for route_log in map_sheet.route_log_ids:
-                self.pool.get('fleet.route.log').write(cr,uid,route_log.id, {'vehicle_id':map_sheet.vehicle_id.id},context=context)            
+        for map_sheet in self:
+            map_sheet.log_fuel_ids.write({'vehicle_id':map_sheet.vehicle_id.id})
+            map_sheet.route_log_ids.write({'vehicle_id':map_sheet.vehicle_id.id})
             if map_sheet.odometer_start_id:
-                self.pool.get('fleet.vehicle.odometer').write(cr,uid, map_sheet.odometer_start_id.id, {'vehicle_id':map_sheet.vehicle_id.id},context=context)
+                map_sheet.odometer_start_id.write({'vehicle_id':map_sheet.vehicle_id.id})
             if map_sheet.odometer_end_id:
-                self.pool.get('fleet.vehicle.odometer').write(cr,uid, map_sheet.odometer_end_id.id, {'vehicle_id':map_sheet.vehicle_id.id},context=context)
-        res = super(fleet_map_sheet, self).write(cr, uid, ids, vals, context=context) 
+                map_sheet.odometer_end_id.write({'vehicle_id':map_sheet.vehicle_id.id})
+            
+
+        res = super(fleet_map_sheet, self).write( vals ) 
         return  res
-    """
     
-    def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+    
+    @api.multi
+    def unlink(self):
         """Allows to delete map sheet in draft,cancel states"""
-        for rec in self.browse(cr, uid, ids, context=context):
+        for rec in self:
             if rec.state not in ['draft', 'cancel']:
                 raise Warning(  _('Cannot delete a map sheet which is in state \'%s\'.') %(rec.state,))
-        return super(fleet_map_sheet, self).unlink(cr, uid, ids, context=context)
+        return super(fleet_map_sheet, self).unlink()
 
 
-        
-    def button_dummy(self, cr, uid, ids, context=None):
+    @api.multi    
+    def button_dummy(self):
         return True
 
-    def action_get_log_fuel(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            fuel_log_ids = self.pool.get('fleet.vehicle.log.fuel').search(cr, uid, [('vehicle_id', '=', record.vehicle_id.id),
-                                                                                    ('date_time','>=',record.date_start),
-                                                                                    ('date_time','<=',record.date_end),
-                                                                                    ('map_sheet_id','=',None)   ])    
-            if len(fuel_log_ids) > 0: 
-                self.pool.get('fleet.vehicle.log.fuel').write(cr,uid, fuel_log_ids,{'map_sheet_id': record.id}, context) 
+    @api.multi
+    def action_get_log_fuel(self):
+        for record in self:
+            fuel_log_ids = self.env['fleet.vehicle.log.fuel'].search(  [('vehicle_id', '=', record.vehicle_id.id),
+                                                                            ('date_time','>=',record.date_start),
+                                                                            ('date_time','<=',record.date_end),
+                                                                            ('map_sheet_id','=',None)   ])    
+            if fuel_log_ids: 
+                fuel_log_ids.write({'map_sheet_id': record.id})
         return True
 
-    def action_get_route_log(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            log_route_ids = self.pool.get('fleet.route.log').search(cr, uid, [ ('vehicle_id', '=', record.vehicle_id.id),
-                                                                               ('date_begin','>=',record.date_start[:10]),
-                                                                               ('date_end','<=',record.date_end),
-                                                                               ('map_sheet_id','=',None) ])     
-            if len(log_route_ids) > 0:
-                self.pool.get('fleet.route.log').write(cr,uid, log_route_ids,{'map_sheet_id': record.id}, context) 
+    @api.multi
+    def action_get_route_log(self):
+        for record in self:
+            log_route_ids = self.env['fleet.route.log'].search( [ ('vehicle_id', '=', record.vehicle_id.id),
+                                                                       ('date_begin','>=',record.date_start[:10]),
+                                                                       ('date_end','<=',record.date_end),
+                                                                       ('map_sheet_id','=',None) ])     
+            if log_route_ids:
+                fuel_log_ids.write({'map_sheet_id': record.id})
         return True
 
-    
-    def action_open(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'open'})
+    @api.multi
+    def action_open(self):
+        self.write( {'state': 'open'})
         return True
-    
-    def action_done(self, cr, uid, ids, context=None):
-        for rec in self.browse(cr, uid, ids, context=context):
+
+    @api.multi
+    def action_done(self):
+        for rec in self:
             if rec.distance_total == 0:
                 raise Warning( _('Cannot set done a map sheet which distance equal with zero.') )
 
-        self.write(cr, uid, ids, {'state': 'done'})
-        for map_sheet in self.browse(cr, uid, ids, context=context):
-            for fuel_log in map_sheet.log_fuel_ids:
-                self.pool.get('fleet.vehicle.log.fuel').write(cr,uid,fuel_log.id, {'state': 'done'}, context=context)
+        self.write( {'state': 'done'})
+        for map_sheet in self:
+            map_sheet.log_fuel_ids.write({'state': 'done'})
         return True
 
 

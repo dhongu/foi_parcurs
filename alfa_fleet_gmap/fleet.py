@@ -159,8 +159,8 @@ class fleet_route(osv.osv):
     _columns = {
        'from_lat': fields.related( 'from_loc_id',   'lat',  type="float",  digits=(9, 6),  string="Latitude from" ),
        'from_lng': fields.related( 'from_loc_id',   'lng',  type="float",  digits=(9, 6),  string="Longitude from" ),
-       'to_lat': fields.related( 'to_loc_id',   'lat',  type="float",   digits=(9, 6), string="Latitude from" ),
-       'to_lng': fields.related( 'to_loc_id',   'lng',  type="float",   digits=(9, 6), string="Longitude from" ),
+       'to_lat': fields.related( 'to_loc_id',   'lat',  type="float",   digits=(9, 6), string="Latitude to" ),
+       'to_lng': fields.related( 'to_loc_id',   'lng',  type="float",   digits=(9, 6), string="Longitude to" ),
        #todo: add via  in care sa fie mai multe puncte
        # de adaugat un KML
     }   
