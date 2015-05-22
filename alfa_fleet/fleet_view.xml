@@ -35,8 +35,13 @@
 					<field name="reservoir"/>
 					<field name="avg_cons"/>
 					<field name="avg_speed"/>
-					<field name="card_ids"/>
+					
 				</field>
+				<group string="Engine Options" position="after">
+					<group	colspan="4">
+						<field name="card_ids"/>
+					</group>
+				</group>
 			</field>
 		</record>
 
@@ -86,6 +91,20 @@
 				</data>
 			</field>
 		</record>
+		
+		
+	<record  id='fleet_vehicle_log_fuel_search' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.log.fuel.search</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_search"/>
+            <field name="arch" type="xml">
+            	<filter name="groupby_vehicle" position="after">
+            		<filter name="groupby_date" context="{'group_by' : 'date'}" string="Date"/>
+            	</filter>
+ 
+            </field>
+        </record>
+		
  
 		<!-- new view -->
 
@@ -138,7 +157,7 @@
 								<button name="action_get_route_log" states="draft,open" string="Get route log" type="object" class="oe_edit_only oe_link"/>
 								<field name="route_log_ids" nolabel="1"
 								on_change="on_change_route_log(route_log_ids, date_start, date_end)"
-								context="{'vehicle_id': vehicle_id, 'date': date_start, 'route_log_ids':route_log_ids }" >
+								context="{ 'date': date_start, 'route_log_ids':route_log_ids, 'default_vehicle_id': vehicle_id, }" >
 									<tree editable="bottom"   colors="red:week_day in (0,6)" >
 										<field name="vehicle_id" invisible="1"/>
 										<field name="state" invisible="1" />
@@ -155,7 +174,7 @@
 						<notebook>
 							<page string="Fuel Logs">
 								<button name="action_get_log_fuel" states="draft,open" string="Get fuel log" type="object" class="oe_edit_only oe_link"/>
-								<field name="log_fuel_ids" nolabel="1"  context="{'vehicle_id': vehicle_id}" >
+								<field name="log_fuel_ids" nolabel="1"  context="{'default_vehicle_id': vehicle_id, 'default_date_time': date_start}" >
 									<tree editable="bottom">
 										<field name="vehicle_id" invisible="1"/>
 										<field name="date_time"/>

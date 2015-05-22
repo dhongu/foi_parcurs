@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008 Deltatech All Rights Reserved
+# Copyright (c) 2015 Deltatech All Rights Reserved
 #                    Dorin Hongu <dhongu(@)gmail(.)com       
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -21,402 +21,203 @@
 
 
 
-from datetime import datetime, timedelta, date
-from openerp.osv import fields, osv
-import time
-import pytz
-from openerp import tools
+from openerp.exceptions import except_orm, Warning, RedirectWarning, ValidationError 
+from openerp import models, fields, api, _
+from openerp import SUPERUSER_ID, api
 import openerp.addons.decimal_precision as dp
-from libxslt import timestamp
+
+from datetime import datetime, timedelta, date
 import math
-from openerp.tools.translate import _
-
-def str_to_datetime(strdate):
-    return  datetime.strptime(strdate, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-
-def datetime_to_str(date_time):
-    return  datetime.strftime(date_time, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-
- 
-
-CREATE = lambda values: (0, False, values)
-UPDATE = lambda id, values: (1, id, values)
-DELETE = lambda id: (2, id, False)
-FORGET = lambda id: (3, id, False)
-LINK_TO = lambda id: (4, id, False)
-DELETE_ALL = lambda: (5, False, False)
-REPLACE_WITH = lambda ids: (6, False, ids)
 
 
 
 
 
-class fleet_vehicle(osv.osv):
-    _inherit = 'fleet.vehicle'
-    
-    def _vehicle_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-#            res[record.id] = record.indicative + ':' + record.model_id.brand_id.name + '/' + record.model_id.modelname + ' / ' + record.license_plate  
-            res[record.id] =  record.license_plate
-        return res    
-
-    def _get_reservoir_level(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):           
-            level_obj = self.pool.get('fleet.reservoir.level')
-            res[record.id] = level_obj.get_level(cr, uid, record.id)
-        return res    
-    
-    _columns = {
-        'name':            fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
-        'indicative':      fields.char('Indicative', size=32, required=True), 
-        'driver2_id':      fields.many2one('res.partner', 'Backup Driver', help='Backup driver of the vehicle'),
-        'mass_cap':        fields.float('Mass capacity'),
-        'tachometer':      fields.boolean('Tachometer', help="Status of tachometer"),
-        'reservoir':       fields.float('Reservoir capacity'),
-        'reservoir_level': fields.function(_get_reservoir_level, type="float", string='Level Reservoir', store=False),
-        'loading_level':   fields.float('Level of loading'),
-        'mass_cap':        fields.float('Mass capacity'),  
-        'card_ids':        fields.many2many('fleet.card', 'fleet_card_vehicle_rel', 'vehicle_id','card_id',  string='Cards'),
-        'avg_cons':        fields.float('Average Consumption'), 
-        'avg_speed':       fields.float('Average Speed'), 
-        'category_id':     fields.many2one('fleet.vehicle.category', 'Vehicle Category'),        
-    }
-
-    _defaults = {
-        'avg_cons': 8.0,
-        'avg_speed': 70.0,
-    }
-  
-    _sql_constraints = [  ('indicative_uniq', 'unique (indicative)', 'The Indicative must be unique !') ]
-
-    def act_show_map_sheet(self, cr, uid, ids, context=None):
-        """ This opens map sheet view to view and add new map sheet for this vehicle
-            @return: the map sheet view
-        """
-        if context is None:
-            context = {}        
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'alfa_fleet', 'fleet_map_sheet_act', context=context)
-        res['context'] = context
-        res['context'].update({'default_vehicle_id': ids[0]})
-        res['domain'] = [('vehicle_id','=', ids[0])]
-        return res
-        return False
-
-fleet_vehicle()   
- 
-  
-
-
-
-class fleet_vehicle_log_fuel(osv.osv):
-    _inherit = 'fleet.vehicle.log.fuel'
-    
-    def _get_reservoir_level(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):           
-            level_obj = self.pool.get('fleet.reservoir.level')
-            res[record.id] = level_obj.get_level_to(cr, uid, record.vehicle_id.id,record.date)
-        return res    
-    
-    _columns = {
-        'map_sheet_id':  fields.many2one('fleet.map.sheet', 'Map Sheet', domain="['&',('vehicle_id','=',vehicle_id),('date_start','<=',date_time),('date_end','>=',date_time)]"),
-        'fuel_id':       fields.many2one('fleet.fuel', 'Fuel'),
-        'card_id':       fields.many2one('fleet.card', 'Card'),
-        'full'      :    fields.boolean('To full', help="Fuel supply was made up to full"),
-        'reservoir_level': fields.function(_get_reservoir_level, type="float", string='Level Reservoir', store=False),
-        'state':           fields.selection([('draft', 'Draft'),  ('done', 'Done')], string='Status',  readonly=True,      
-                                help="When the Log Fuel is created the status is set to 'Draft'.\n\
-                                      When the Log Fuel is closed, the status is set to 'Done'."),
-    }
-    _defaults = {
-        'state': 'draft',
-        'vehicle_id' : lambda self, cr, uid, context : context['vehicle_id'] if context and 'vehicle_id' in context else None 
-    }
-    
-
-    
-    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):  
-        if not vehicle_id:
-            return {}       
-        res = super(fleet_vehicle_log_fuel, self).on_change_vehicle(cr, uid, ids, vehicle_id, context=context) 
-        res['value']['map_sheet_id'] = None
-        return res
-
-    def load(self, cr, uid, fields, data, context=None):
-        res = super(fleet_vehicle_log_fuel, self).load(cr, uid, fields, data, context)
-        return res
-    
-fleet_vehicle_log_fuel()
-
-
-# modific campul din data in datatimp
-class fleet_vehicle_cost(osv.osv):
-    _inherit = 'fleet.vehicle.cost'
-
-    def _year_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            if (record.date):
-                res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
-            else:
-                res[record.id] = _('Unknown')
-        return res    
-    
-    _columns = {
-        'date_time':    fields.datetime('Date',help='Date and time when the cost has been executed'),
-        'year':         fields.function(_year_get_fnc, type="char", string='Year', store=True),
-    }
-
-    _defaults = {
-        'date_time': fields.datetime.now,
-    }
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'date_time' in vals and 'date' not in vals:
-            vals['date'] = vals['date_time']
-        if 'date' in vals and 'date_time' not in vals:
-            vals['date_time'] = vals['date']
-        res = super(fleet_vehicle_cost,self).write( cr, uid, ids, vals, context)
-        return res
-
-
-fleet_vehicle_cost()
-
-class fleet_vehicle_odometer(osv.osv):
-    _inherit = 'fleet.vehicle.odometer'  
-    _columns = {
-        'date_time': fields.datetime('Date Time'), 
-        'real': fields.boolean('Is real')        
-    }
-    _defaults = {
-        'date_time': fields.datetime.now,
-    }    
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'date_time' in vals and 'date' not in vals:
-            vals['date'] = vals['date_time']
-        if 'date' in vals and 'date_time' not in vals:
-            vals['date_time'] = vals['date']
-        res = super(fleet_vehicle_odometer,self).write( cr, uid, ids, vals, context)
-        return res 
-       
-fleet_vehicle_odometer()
-
-
-
-##########################################################################################################
-
-
-class fleet_fuel(osv.osv):
-    _name = 'fleet.fuel'
-    _description = 'Fuel'
-    _columns = {
-        'name':      fields.char('Fuel', size=75, required=True), 
-        'fuel_type': fields.selection([('gasoline', 'Gasoline'), ('diesel', 'Diesel')], 'Fuel Type'),
-     }
-fleet_fuel()
-
-class fleet_scope(osv.osv):
-    _name = 'fleet.scope'
-    _description = 'Scope'
-    _columns = {
-        'name':      fields.char('Scope', size=75, required=True), 
-     }
-fleet_scope()
-
-class fleet_card(osv.osv):
-    _name = 'fleet.card'
-    _description = 'Fuel Card'
-    _columns = {
-        'name':         fields.char('Series card', size=20, required=True), 
-        'type_card':    fields.selection([('2', 'Own pomp'),('3','Rompetrol'),('4','Petrom'),('5','Lukoil'),('6','OMV')], 'Type Card'),  
-        'vehicle_ids':  fields.many2many('fleet.vehicle', 'fleet_card_vehicle_rel', 'card_id', 'vehicle_id', string='Vehicles'),
-        'log_fuel_ids': fields.one2many('fleet.vehicle.log.fuel','card_id','Fuel log'),
-        'active':       fields.boolean('Active'),
-     }
-    _defaults = {
-        'active': 1,
-    }
-    _sql_constraints = [  ('serie_uniq', 'unique (name)', 'The series must be unique !') ]
-    
-    
-fleet_card()
-
-
-
-
-
-
-class fleet_map_sheet(osv.osv):
+class fleet_map_sheet(models.Model):
     _name = 'fleet.map.sheet'
     _description = 'Fleet Map Sheet' 
-    
-    def _get_odometer(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        for record in self.browse(cr,uid,ids,context=context):
-            if field_name == 'odometer_start':
-                if record.odometer_start_id.id:
-                    res[record.id]  = record.odometer_start_id.value
+
+
+
+    @api.one
+    @api.depends('route_log_ids','odometer_start', 'odometer_end', 'odometer_start_id','odometer_end_id')
+    def _compute_odometer(self):
+        if self.odometer_start_id:
+            self.odometer_start  = self.odometer_start_id.value
+        else:
+            odometer = self.env['fleet.vehicle.odometer'].search([('vehicle_id', '=', self.vehicle_id.id),('date','<=',self.date_start)], limit=1, order='date desc')
+            if odometer:
+                self.odometer_start = odometer.value 
+                if not self.odometer_end_id:
+                    self.odometer_end = self.odometer_start   + self.distance_total       
+            else:                
+                if self.odometer_end_id:
+                    self.odometer_start = self.odometer_end_id.value  - self.distance_total 
                 else:
-                    ids = self.pool.get('fleet.vehicle.odometer').search(cr, uid, [('vehicle_id', '=', record.vehicle_id.id),('date','<=',record.date_start)], limit=1, order='date desc')
-                    if len(ids) > 0:
-                        res[record.id] = self.pool.get('fleet.vehicle.odometer').browse(cr, uid, ids[0], context=context).value   
-                    else:                    # chiar sa nu fie nici unul?
-                        if record.odometer_end_id.id:
-                            res[record.id] = record.odometer_end_id.value  - record.distance_total              
-            if field_name == 'odometer_end':
-                if record.odometer_end_id.id:
-                    res[record.id]  = record.odometer_end_id.value
+                    self.odometer_start = 0   
+
+        if self.odometer_end_id:
+            self.odometer_end  = self.odometer_end_id.value
+        else:
+            odometer = self.env['fleet.vehicle.odometer'].search([('vehicle_id', '=', self.vehicle_id.id),('date','>=',self.date_end)], limit=1, order='date')
+            if  odometer:
+                self.odometer_end = odometer.value                
+            else:
+                self.odometer_end = self.odometer_start   + self.distance_total  
+
+
+
+    @api.one
+    def _get_odometer_start(self):
+        if self.odometer_start_id:
+            self.odometer_start  = self.odometer_start_id.value
+        else:
+            odometer = self.env['fleet.vehicle.odometer'].search([('vehicle_id', '=', self.vehicle_id.id),('date','<=',self.date_start)], limit=1, order='date desc')
+            if odometer:
+                self.odometer_start = odometer.value 
+                if not self.odometer_end_id:
+                    self.odometer_end = self.odometer_start   + self.distance_total       
+            else:                
+                if self.odometer_end_id:
+                    self.odometer_start = self.odometer_end_id.value  - self.distance_total 
                 else:
-                    ids = self.pool.get('fleet.vehicle.odometer').search(cr, uid, [('vehicle_id', '=', record.vehicle_id.id),('date','>=',record.date_end)], limit=1, order='date')
-                    if len(ids) > 0:
-                        res[record.id] = self.pool.get('fleet.vehicle.odometer').browse(cr, uid, ids[0], context=context).value                
-                    else:
-                        res[record.id] = record.odometer_start   + record.distance_total                         
-        return res       
-     
+                    self.odometer_start = 0   
 
-    def _set_odometer(self, cr, uid, id, field_name, value, args=None, context=None):
-        if value:
-            for record in self.browse(cr,uid,[id],context=context):
-                if field_name == 'odometer_start':             
-                    data = {'value': value, 'date': record.date_start, 'vehicle_id': record.vehicle_id.id}
-                    if record.odometer_start_id.id:
-                        self.pool.get('fleet.vehicle.odometer').write(cr, uid, [record.odometer_start_id.id], data, context=context)
-                    else:
-                        res_id = record.odometer_start_id = self.pool.get('fleet.vehicle.odometer').create(cr, uid, data, context=context)
-                        self.write(cr, uid, [id], {'odometer_start_id':res_id},context=context)
-                        
-                if field_name == 'odometer_end':
-                    data = {'value': value, 'date': record.date_end, 'vehicle_id': record.vehicle_id.id}
-                    if record.odometer_end_id.id:
-                        self.pool.get('fleet.vehicle.odometer').write(cr, uid, [record.odometer_end_id.id], data, context=context)
-                    else:
-                        res_id = record.odometer_end_id = self.pool.get('fleet.vehicle.odometer').create(cr, uid, data, context=context)
-                        self.write(cr, uid, [id], {'odometer_end_id':res_id},context=context)               
-        return        
+    @api.one
+    def _get_odometer_end(self):        
+        if self.odometer_end_id:
+            self.odometer_end  = self.odometer_end_id.value
+        else:
+            odometer = self.env['fleet.vehicle.odometer'].search([('vehicle_id', '=', self.vehicle_id.id),('date','>=',self.date_end)], limit=1, order='date')
+            if  odometer:
+                self.odometer_end = odometer.value                
+            else:
+                if self.odometer_start_id:
+                    self.odometer_end = self.odometer_start_id.value   + self.distance_total  
+                else:
+                    self.odometer_end = self.odometer_start   + self.distance_total                      
+                
+    @api.one
+    def _set_odometer_start(self):
+        data = {'value': self.odometer_start, 'date': self.date_start, 'vehicle_id': self.vehicle_id.id}
+        if self.odometer_start_id:
+            self.odometer_start_id.write(data)
+        else:
+            self.odometer_start_id = self.env['fleet.vehicle.odometer'].create( data)
 
+    @api.one
+    def _set_odometer_end(self):
+        data = {'value': self.odometer_end, 'date': self.date_end, 'vehicle_id': self.vehicle_id.id}
+        if self.odometer_end_id:
+            self.odometer_end_id.write(data)
+        else:
+            self.odometer_end_id = self.env['fleet.vehicle.odometer'].create( data)            
 
-
-    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}        
-        for map_sheet in self.browse(cr, uid, ids, context=context):
-            res[map_sheet.id] = {
-                'liter_total': 0.0,
-                'amount_total': 0.0,
-                'distance_total': 0.0,
-                'norm_cons': 0.0,
-                'odometer_end': 0.0,
-            }
-            liter = amount = 0.0
-            distance_total = 0.0 
-            norm_cons = 0.0             
-            for log_fuel in map_sheet.log_fuel_ids:
-                liter += log_fuel.liter
-                amount +=  log_fuel.amount
-            res[map_sheet.id]['liter_total'] = liter     
-            res[map_sheet.id]['amount_total'] = amount
+        
             
-            for route in map_sheet.route_log_ids:
-                distance_total += route.distance 
-                norm_cons += route.norm_cons           
-            res[map_sheet.id]['distance_total'] = distance_total
-            res[map_sheet.id]['norm_cons'] =  norm_cons  #distance_total * map_sheet.vehicle_id.avg_cons / 100
-            res[map_sheet.id]['odometer_end'] = map_sheet.odometer_start + distance_total
+            
+    @api.one
+    @api.depends('route_log_ids','log_fuel_ids')
+    def _compute_amount_all(self):
+        liter = amount = 0.0
+        distance_total = 0.0 
+        norm_cons = 0.0             
+        for log_fuel in self.log_fuel_ids:
+            liter += log_fuel.liter
+            amount +=  log_fuel.amount
+        self.liter_total = liter     
+        self.amount_total = amount
+        
+        for route in self.route_log_ids:
+            distance_total += route.distance 
+            norm_cons += route.norm_cons           
+        self.distance_total  = distance_total
+        self.norm_cons  =  norm_cons  #distance_total * map_sheet.vehicle_id.avg_cons / 100
+        #self.odometer_end  = map_sheet.odometer_start + distance_total
 #            self._set_odometer(cr, uid, [map_sheet.id],'odometer_end',map_sheet.odometer_start + distance_total,context=context)
 
             
-        return res
-
-    
-    def _get_map_sheet_fuel(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('fleet.vehicle.log.fuel').browse(cr, uid, ids, context=context):
-            result[line.map_sheet_id.id] = True
-        return result.keys()
-
-
-    def _get_map_sheet_route(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('fleet.route.log').browse(cr, uid, ids, context=context):
-            result[line.map_sheet_id.id] = True
-        return result.keys()        
-    
- 
-    def _get_reservoir_level_start(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):           
-            level_obj = self.pool.get('fleet.reservoir.level')
-            res[record.id] = level_obj.get_level_to(cr, uid, record.vehicle_id.id, record.date_start)
-        return res  
-
-    def _get_reservoir_level_end(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):           
-            level_obj = self.pool.get('fleet.reservoir.level')
-            res[record.id] = level_obj.get_level_to(cr, uid, record.vehicle_id.id, record.date_end)
-        return res   
-    
-    _columns = {  
-        'name':         fields.char('Number', size=20, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'date':         fields.date('Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'vehicle_id':   fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle',readonly=True, states={'draft':[('readonly',False)]}),
-        'category_id':  fields.related('vehicle_id','category_id', type="many2one", readonly=True,  relation='fleet.vehicle.category', string="Vehicle Category"),
-        'driver_id':    fields.many2one('res.partner', 'Driver', help='Driver of the vehicle',states={'done':[('readonly',True)]}),
-        'driver2_id':   fields.many2one('res.partner', 'Backup Driver', help='Backup driver of the vehicle',states={'done':[('readonly',True)]}),
-        'avg_cons':     fields.related('vehicle_id','avg_cons', type="float", readonly=True, string="Average Consumption"),
-
-                
-        'odometer_start_id':  fields.many2one('fleet.vehicle.odometer', string= 'ID Odometer start',  domain="[('vehicle_id','=',vehicle_id)]",   states={'done':[('readonly',True)]}),
-        'odometer_end_id':    fields.many2one('fleet.vehicle.odometer', string= 'ID Odometer end',    domain="[('vehicle_id','=',vehicle_id)]",   states={'done':[('readonly',True)]}),
-
-        'date_start':         fields.datetime('Date Start', help='Date time at the start of this map sheet',   states={'done':[('readonly',True)]}),
-        'date_start_old':     fields.dummy('Date Start', type='datetime' ),
-        'date_end':           fields.datetime('Date End',   help='Date time at the end of this map sheet',     states={'done':[('readonly',True)]}),
-  
-        'odometer_start': fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', 
-                                           string= _('Odometer Start'), help='Odometer measure of the vehicle at the start of this map sheet',
-                                           states={'done':[('readonly',True)]}),
-        'odometer_end':   fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', 
-                                          string= _('Odometer End'),   help='Odometer measure of the vehicle at the end of this map sheet',
-                                           states={'done':[('readonly',True)]}),
-      
-        'state': fields.selection([('draft', 'Draft'), ('open','In Progress'), ('done', 'Done'), ('cancel', 'Cancelled')], string='Status',  readonly=True,      
-            help="When the Map Sheet is created the status is set to 'Draft'.\n\
-                  When the Map Sheet is in progress the status is set to 'In Progress' .\n\
-                  When the Map Sheet is closed, the status is set to 'Done'."),
-       
-
-
-
-        'log_fuel_ids': fields.one2many('fleet.vehicle.log.fuel','map_sheet_id','Fuel log',states={'done':[('readonly',True)]}),
-        'route_log_ids': fields.one2many('fleet.route.log','map_sheet_id','Route Logs',states={'done':[('readonly',True)]}),
-                      
-        'liter_total': fields.function(_amount_all, type='float', string='Total Liter',
-            store={'fleet.vehicle.log.fuel': (_get_map_sheet_fuel, None, 10),
-                   'fleet.route.log': (_get_map_sheet_route, None,  10), }, multi="sums", help="The total liters"),
-                
-        'amount_total': fields.function(_amount_all,  type='float', string='Total Amount',
-            store={'fleet.vehicle.log.fuel': (_get_map_sheet_fuel, None, 10),
-                   'fleet.route.log': (_get_map_sheet_route, None,  10), }, multi="sums", help="The total amount for fuel"),
-       
-        'distance_total':fields.function(_amount_all,  type='float', string='Total distance',
-            store={'fleet.vehicle.log.fuel': (_get_map_sheet_fuel, None, 10),
-                   'fleet.route.log': (_get_map_sheet_route, None,  10), }, multi="odmeter", help="The total distance"),
-                
-        'norm_cons':  fields.function(_amount_all, type='float',  string='Normal Consumption',
-            store={'fleet.vehicle.log.fuel': (_get_map_sheet_fuel, None, 10),
-                   'fleet.route.log': (_get_map_sheet_route, None, 10), }, multi="odmeter", help="The Normal Consumption"),
-                
-        'company_id': fields.many2one('res.company','Company',required=True,states={'done':[('readonly',True)]}), 
         
-        'reservoir_level_start': fields.function(_get_reservoir_level_start, type="float", string='Level Reservoir Start', 
-                                                 store=False, help="Fuel level in the reservoir at the beginning of road map"),
-        'reservoir_level_end': fields.function(_get_reservoir_level_end, type="float", string='Level Reservoir End', 
-                                                 store=False, help="Fuel level in the reservoir at the beginning of road map"),
+     
+
+    @api.one
+    @api.depends('vehicle_id','date_start')
+    def _compute_reservoir_level_start(self):
+        if self.vehicle_id:
+            self.reservoir_level_start =   self.env['fleet.reservoir.level'].get_level_to( self.vehicle_id.id, self.date_start)     
+ 
+
+    @api.one
+    @api.depends('vehicle_id','date_end')
+    def _compute_reservoir_level_end(self):
+        if self.vehicle_id:
+            self.reservoir_level_end =  self.env['fleet.reservoir.level'].get_level_to( self.vehicle_id.id, self.date_end)  
+
+
+
+    name  =        fields.Char(string='Number', size=20, required=True, readonly=True, states={'draft':[('readonly',False)]})
+    date =         fields.Date(string='Date', required=True, readonly=True, states={'draft':[('readonly',False)]})
+    vehicle_id =   fields.Many2one('fleet.vehicle', string='Vehicle', required=True, help='Vehicle',readonly=True, states={'draft':[('readonly',False)]})
+    category_id =  fields.Many2one(related='vehicle_id.category_id',  readonly=True,  relation='fleet.vehicle.category', string="Vehicle Category")
+    driver_id =    fields.Many2one('res.partner',  string='Driver', help='Driver of the vehicle',states={'done':[('readonly',True)]})
+    driver2_id =   fields.Many2one('res.partner',  string='Backup Driver', help='Backup driver of the vehicle',states={'done':[('readonly',True)]})
+    avg_cons =     fields.Float(related='vehicle_id.avg_cons',   readonly=True, string="Average Consumption")
+
+                
+
+
+    date_start =       fields.Datetime(string = 'Date Start', help='Date time at the start of this map sheet',   states={'done':[('readonly',True)]})
+    date_start_old =   fields.Datetime(string = 'Date Start')
+    date_end =         fields.Datetime(string = 'Date End',   help='Date time at the end of this map sheet',     states={'done':[('readonly',True)]})
+  
+
+    odometer_end =  fields.Float(_compute='_compute_odometer', inverse='_set_odometer_end' ,   states={'done':[('readonly',True)]} ,
+                                          string=  'Odometer End' ,  store=False,
+                                           help='Odometer measure of the vehicle at the end of this map sheet' )  
+ 
+    odometer_start = fields.Float(compute='_compute_odometer', inverse='_set_odometer_start' ,  states={'done':[('readonly',True)]}  ,  
+                                           string=  'Odometer Start' , store=False,
+                                           help='Odometer measure of the vehicle at the start of this map sheet' )
+    
+
+    
+
+    
+    odometer_start_id =  fields.Many2one('fleet.vehicle.odometer', string = 'ID Odometer start', 
+                                          domain="[('vehicle_id','=',vehicle_id)]",   states={'done':[('readonly',True)]})
+  
+    
+    odometer_end_id =    fields.Many2one('fleet.vehicle.odometer', string = 'ID Odometer end',   
+                                          domain="[('vehicle_id','=',vehicle_id)]",   states={'done':[('readonly',True)]})
+      
+    state = fields.Selection([('draft', 'Draft'), ('open','In Progress'), ('done', 'Done'), ('cancel', 'Cancelled')], 
+                                string='Status',  readonly=True,   default='draft',     
+                                help="When the Map Sheet is created the status is set to 'Draft'.\n\
+                                      When the Map Sheet is in progress the status is set to 'In Progress' .\n\
+                                      When the Map Sheet is closed, the status is set to 'Done'.")
+       
+
+    log_fuel_ids = fields.One2many('fleet.vehicle.log.fuel','map_sheet_id', string='Fuel log', states={'done':[('readonly',True)]})
+    route_log_ids = fields.One2many('fleet.route.log','map_sheet_id', string='Route Logs', states={'done':[('readonly',True)]})
+                      
+    liter_total = fields.Float(compute='_compute_amount_all',   string='Total Liter', store=True, help="The total liters")
+                
+    amount_total = fields.Float(compute='_compute_amount_all',    string='Total Amount', store=True, help="The total amount for fuel")
+       
+    distance_total = fields.Float(compute='_compute_amount_all',    string='Total distance',  store=True, help="The total distance")
+            
+    norm_cons = fields.Float(compute='_compute_amount_all',    string='Normal Consumption', store=True, help="The Normal Consumption")
+                
+    company_id = fields.Many2one('res.company','Company',required=True,states={'done':[('readonly',True)]},
+                                 default=lambda self: self.env['res.company']._company_default_get('fleet.map.sheet'))
+  
+     
+    reservoir_level_start = fields.Float(compute='_compute_reservoir_level_start',  string='Level Reservoir Start', 
+                                                 store=False, help="Fuel level in the reservoir at the beginning of road map")
+    reservoir_level_end = fields.Float(compute='_compute_reservoir_level_end', string='Level Reservoir End', 
+                                                 store=False, help="Fuel level in the reservoir at the beginning of road map")
                               
-    }
+    
     
     def _conv_local_datetime_to_utc(self,cr, uid, date, context):
         tz_name = context['tz']             
@@ -431,26 +232,31 @@ class fleet_map_sheet(osv.osv):
         if context and 'date' in context:
             res = self._conv_local_datetime_to_utc(cr, uid, context['date'][:10]+' 00:00:00', context)
         else:
-            res = time.strftime('%Y-%m-%d %H:%M:%S')
+            res = fields.Datetime.now()
         return res
+
+
 
     def _get_default_date_end(self, cr, uid, context):
         if context and 'date' in context:
             res = self._conv_local_datetime_to_utc(cr, uid, context['date'][:10]+' 23:59:59', context)
         else:
-            res = time.strftime('%Y-%m-%d %H:%M:%S')
-        return res
-
-    
-    
+            res = fields.Datetime.now()
+        return res   
+     
+    def _get_default_date(self, cr, uid, context):
+        if context and 'date' in context:
+            res = context['date']
+        else:
+            res = fields.Date.today()()
+        return res   
     
     _defaults = {
-        'state': 'draft',
-        'date': lambda self, cr, uid, context : context['date'] if context and 'date' in context else time.strftime('%Y-%m-%d'),
+        'date': _get_default_date,
         'date_start': _get_default_date_start,
         'date_end': _get_default_date_end,
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').next_by_code(y, z, 'fleet.map.sheet') or '/',
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
+        
         'vehicle_id' : lambda self, cr, uid, context : context['vehicle_id'] if context and 'vehicle_id' in context else None 
     }
 
@@ -507,13 +313,13 @@ class fleet_map_sheet(osv.osv):
             date_start_old   = self.read(cr, uid, ids, ['date_start'], context=context)[0]['date_start']
         
         # map_sheet = self.browse(cr, uid, ids, context=context)[0]
-        new_date_start_int = str_to_datetime(date_start)  
-        old_date_start_int = str_to_datetime(date_start_old)
+        new_date_start_int = fields.Datetime.from_string(date_start)  
+        old_date_start_int = fields.Datetime.from_string(date_start_old)
         
         date_dif = new_date_start_int - old_date_start_int
         
-        new_date_end_int = str_to_datetime(date_end) 
-        date_end = datetime_to_str(new_date_end_int + date_dif)   
+        new_date_end_int = fields.Datetime.from_string(date_end) 
+        date_end = fields.Datetime.to_string(new_date_end_int + date_dif)   
           
 
         route_log_list = self.resolve_2many_commands(cr, uid, 'route_log_ids', route_log_ids, ['id','date_begin','date_end'], context=context)
@@ -524,10 +330,10 @@ class fleet_map_sheet(osv.osv):
                 routes = [x for x in route_log_list if x['id'] == route_log_ids[i][1]]
                 if routes:
                     route = routes[0]     
-                    date_begin_int = str_to_datetime(route['date_begin'])
-                    date_end_int = str_to_datetime(route['date_end'])
-                    route_log_ids[i][2] = {'date_begin':datetime_to_str(date_begin_int+date_dif),
-                                           'date_end':datetime_to_str(date_end_int+date_dif)}
+                    date_begin_int = fields.Datetime.from_string(route['date_begin'])
+                    date_end_int = fields.Datetime.from_string(route['date_end'])
+                    route_log_ids[i][2] = {'date_begin':fields.Datetime.to_string(date_begin_int+date_dif),
+                                           'date_end':fields.Datetime.to_string(date_end_int+date_dif)}
                     route_log_ids[i][0] = 1
        
         return {
@@ -583,7 +389,7 @@ class fleet_map_sheet(osv.osv):
         """Allows to delete map sheet in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
-                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a map sheet which is in state \'%s\'.') %(rec.state,))
+                raise Warning(  _('Cannot delete a map sheet which is in state \'%s\'.') %(rec.state,))
         return super(fleet_map_sheet, self).unlink(cr, uid, ids, context=context)
 
 
@@ -619,7 +425,7 @@ class fleet_map_sheet(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.distance_total == 0:
-                raise osv.except_osv(_('Invalid Action!'), _('Cannot set done a map sheet which distance equal with zero.') )
+                raise Warning( _('Cannot set done a map sheet which distance equal with zero.') )
 
         self.write(cr, uid, ids, {'state': 'done'})
         for map_sheet in self.browse(cr, uid, ids, context=context):
@@ -627,74 +433,98 @@ class fleet_map_sheet(osv.osv):
                 self.pool.get('fleet.vehicle.log.fuel').write(cr,uid,fuel_log.id, {'state': 'done'}, context=context)
         return True
 
-fleet_map_sheet()
 
-class fleet_route_log(osv.osv):
+ 
+
+
+ 
+class fleet_route_log(models.Model):
     _name = 'fleet.route.log'
     _description = 'Route Log'
 
-    def _get_norm_cons(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.vehicle_id:
-                res[record.id] = record.distance * record.vehicle_id.avg_cons / 100
-        return res      
-    
-    def _get_name_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = record.route_id.name  
-        return res   
-
-    def _get_week_day(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            date_int =  str_to_datetime(record.date_begin)
-            res[record.id] = date_int.strftime('%w')
-        return res   
 
     
-    _columns = {
-        'name':             fields.function(_get_name_fnc, type="char", string='Name', store=False),
-        'scope_id':         fields.many2one('fleet.scope', 'Scope', states={'done':[('readonly',True)]}),
-        'date_begin':       fields.datetime('Date Begin', states={'done':[('readonly',True)]}),
-        'date_end':         fields.datetime('Date End', states={'done':[('readonly',True)]}),
-        'week_day':         fields.function(_get_week_day, type="integer", string='Name', store=False),
-        'route_id':         fields.many2one('fleet.route', 'Route', states={'done':[('readonly',True)]}),
-        'vehicle_id':       fields.many2one('fleet.vehicle', 'Vehicle', states={'done':[('readonly',True)]}),   
-        'map_sheet_id':     fields.many2one('fleet.map.sheet', 'Map Sheet', domain="['&',('vehicle_id','=',vehicle_id),('date_start','<=',date_begin),('date_end','>=',date_end)]"),
-        'distance':         fields.float('Distance', states={'done':[('readonly',True)]}),     
-        'norm_cons':        fields.function(_get_norm_cons, type='float',  string='Normal Consumption',   store=True,  help="The Normal Consumption", states={'done':[('readonly',True)]}),
-        'state':            fields.selection([('draft', 'Draft'),  ('done', 'Done')], string='Status',      
+    
+    @api.model
+    def _get_default_date_begin(self):
+        res = None
+        context = self.env.context
+        if  'date' in context:
+            res = context['date']
+            date_end = res
+            if context and 'route_log_ids' in context:
+                route_log_ids = context['route_log_ids']
+                for route_log in  route_log_ids:
+                    if route_log[0] == 4:
+                         route_log_obj = self.browse(route_log[1])
+                         date_end = route_log_obj.date_end       
+                    elif route_log[0] == 0 or route_log[0] == 1:
+                        values = route_log[2]
+                        if values and 'date_end' in values:
+                            date_end = values['date_end']
+                    if date_end > res :             
+                        res =  date_end
+        return res
+
+    """
+    @api.model
+    def _get_default_vehicle_id(self):
+        context =  self.env.context or {}
+        res = context['vehicle_id'] if context and 'vehicle_id' in context else None  
+        return  res
+    """
+
+    
+    name       = fields.Char(compute='_compute_route_name', string="Name", store=False)
+    scope_id   =  fields.Many2one('fleet.scope', string='Scope', states={'done':[('readonly',True)]})
+    date_begin = fields.Datetime(string='Date Begin', states={'done':[('readonly',True)]}, default=_get_default_date_begin)
+    date_end   =   fields.Datetime(string='Date End', states={'done':[('readonly',True)]}, default=_get_default_date_begin)
+    week_day   =   fields.Integer(compute='_compute_week_day',  string='Name', store=False)
+    route_id   =   fields.Many2one('fleet.route', string='Route', states={'done':[('readonly',True)]})
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', states={'done':[('readonly',True)]},  ) #default=_get_default_vehicle_id )   
+    map_sheet_id =   fields.Many2one('fleet.map.sheet', string='Map Sheet', 
+                                     domain="['&',('vehicle_id','=',vehicle_id),('date_start','<=',date_begin),('date_end','>=',date_end)]")
+    distance  =      fields.Float(string='Distance', states={'done':[('readonly',True)]})   
+    norm_cons =  fields.Float(compute='_compute_norm_cons',    string='Normal Consumption',   
+                              store=True,  help="The Normal Consumption", states={'done':[('readonly',True)]})
+    state     =    fields.Selection([('draft', 'Draft'),  ('done', 'Done')], string='Status',   default='draft',    
                                 help="When the Route Log is created the status is set to 'Draft'.\n\
-                                      When the Route Log is closed, the status is set to 'Done'."),
-    }
+                                      When the Route Log is closed, the status is set to 'Done'.")
 
 
     
     _order = "date_begin"
 
-    def _get_default_date_begin(self, cr, uid, context):
-        if context and 'date' in context:
-            res = context['date']
-            if context and 'route_log_ids' in context:
-                route_log_ids = context['route_log_ids']
-                for route_log in  route_log_ids:
-                    values = route_log[2]
-                    if values and 'date_end' in values and  values['date_end']>res:
-                        res = values['date_end']             
-        else:
-            res = None
-           
-        return res
+    @api.one
+    @api.depends('distance','vehicle_id.avg_cons')
+    def _compute_norm_cons(self):
+        if self.vehicle_id:
+            self.norm_cons =  self.distance * self.vehicle_id.avg_cons / 100
 
-    _defaults = {
-        'date_begin': _get_default_date_begin,
-        'date_end': _get_default_date_begin,
-        'state':  'draft',
-        'vehicle_id' : lambda self, cr, uid, context : context['vehicle_id'] if context and 'vehicle_id' in context else None         
-    }
+
+    @api.one
+    @api.depends('route_id.name')
+    def _compute_route_name(self):
+        if self.route_id:
+            self.name =  self.route_id.name  
     
+
+    @api.one
+    @api.depends('date_begin')
+    def _compute_week_day(self):
+        date_int =   fields.Datetime.from_string(self.date_begin)
+        self.week_day = date_int.strftime('%w')
+
+
+     
+    @api.one
+    @api.constrains('date_begin', 'date_end')
+    def _check_dates(self):
+        if self.date_begin > self.date_end:
+            raise ValidationError("Route end-date must be greater then route begin-date")
+     
+     
+    """ 
     def _check_dates(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
@@ -712,6 +542,7 @@ class fleet_route_log(osv.osv):
     _constraints = [
         (_check_dates, 'Error ! Route end-date must be greater then route start-begin', ['date_begin','date_end'])
     ]
+    """
     
     def on_change_route(self, cr, uid, ids, route_id, distance, date_begin, context=None):
         if not route_id:
@@ -720,11 +551,13 @@ class fleet_route_log(osv.osv):
             return {}
         route = self.pool.get('fleet.route').browse(cr, uid, route_id, context=context)
         
-        date_int =  str_to_datetime(date_begin)
+        
+         
+        date_int = fields.Datetime.from_string(date_begin)
         week_day = int(date_int.strftime('%w'))
         date_end = date_int  # datetime.strptime(date_begin,tools.DEFAULT_SERVER_DATETIME_FORMAT) 
         date_end = date_end + timedelta(hours=int(math.floor(route.duration)), minutes=int((route.duration%1) * 60) )
-        date_end = datetime_to_str(date_end)    # datetime.strftime(date_end,tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        date_end = fields.Datetime.to_string(date_end)    # datetime.strftime(date_end,tools.DEFAULT_SERVER_DATETIME_FORMAT)
        
         return {
             'value': {
@@ -740,45 +573,202 @@ class fleet_route_log(osv.osv):
         """Allows to delete route log in draft states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', False]:
-                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a route log which is in state \'%s\'.') %(rec.state,))
+                raise Warning( _('Cannot delete a route log which is in state \'%s\'.') %(rec.state,))
         return super(fleet_route_log, self).unlink(cr, uid, ids, context=context)
+    
+    
+    
 
 
+
+class fleet_vehicle(models.Model):
+    _inherit = 'fleet.vehicle'
+
+
+    name = fields.Char(compute='_compute_vehicle_name', string="Name", store=True)
+    indicative =     fields.Char(string='Indicative', size=32)
+    driver2_id =     fields.Many2one('res.partner', string='Backup Driver', help='Backup driver of the vehicle')
+    mass_cap =        fields.Float(string='Mass capacity')
+    tachometer =      fields.Boolean(string='Tachometer', help="Status of tachometer")
+    reservoir =       fields.Float(string='Reservoir capacity')
+    reservoir_level = fields.Float(compute='_compute_reservoir_level' , string='Level Reservoir', store=False)
+    loading_level =  fields.Float(string='Level of loading')
+    mass_cap =       fields.Float(string='Mass capacity')  
+    card_ids =      fields.Many2many('fleet.card', 'fleet_card_vehicle_rel', 'vehicle_id','card_id',  string='Cards')
+    avg_cons =       fields.Float(string='Average Consumption',default=8.0)
+    avg_speed =      fields.Float(string='Average Speed',default=70.0) 
+    category_id =    fields.Many2one('fleet.vehicle.category', string='Vehicle Category')
+
+
+
+    _sql_constraints = [  ('indicative_uniq', 'unique (indicative)', 'The Indicative must be unique !') ]
+
+ 
+    
+    @api.multi
+    def act_show_map_sheet(self):
+        """ This opens map sheet view to view and add new map sheet for this vehicle
+            @return: the map sheet view
+        """
+        self.ensure_one()
+        result = self.env.ref(self._module+'.fleet_map_sheet_act').read()[0]
+        result['context'] = dict(self.env.context, default_vehicle_id=self.id ) 
+        result['domain'] = [('vehicle_id', '=', self.id)]
+        return result            
+                           
+                               
+    @api.one
+    @api.depends('license_plate')
+    def _compute_vehicle_name(self):
+        #self.name =self.indicative + ':' + self.model_id.brand_id.name + '/' + self.model_id.modelname + ' / ' + self.license_plate  
+        self.name =  self.license_plate
+   
+    @api.one
+    def _compute_reservoir_level(self):
+        if not isinstance(self.id, models.NewId):
+            self.reservoir_level = self.env['fleet.reservoir.level'].get_level(self.id)
+    
+
+
+class fleet_vehicle_log_fuel(models.Model):
+    _inherit = 'fleet.vehicle.log.fuel'
+    
+ 
+
+    map_sheet_id =  fields.Many2one('fleet.map.sheet', string='Map Sheet', domain="['&',('vehicle_id','=',vehicle_id),('date_start','<=',date_time),('date_end','>=',date_time)]")
+    fuel_id =  fields.Many2one('fleet.fuel', string='Fuel')
+    card_id =  fields.Many2one('fleet.card', string='Card')
+    full  =   fields.Boolean(string='To full', help="Fuel supply was made up to full")
+    reservoir_level = fields.Float(compute='_compute_reservoir_level' , string='Level Reservoir', store=False)
+    state = fields.Selection([('draft', 'Draft'),  ('done', 'Done')], string='Status',  readonly=True,     
+                                help="When the Log Fuel is created the status is set to 'Draft'.\n\
+                                      When the Log Fuel is closed, the status is set to 'Done'.")
+    
+    @api.one
+    def _compute_reservoir_level(self):
+        if self.vehicle_id and self.date_time:
+            self.reservoir_level = self.env['fleet.reservoir.level'].get_level_to(self.vehicle_id.id, self.date_time)
+    
+    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):  
+        if not vehicle_id:
+            return {}       
+        res = super(fleet_vehicle_log_fuel, self).on_change_vehicle(cr, uid, ids, vehicle_id, context=context) 
+        res['value']['map_sheet_id'] = None
+        return res
+
+
+
+
+class fleet_vehicle_cost(models.Model):
+    _inherit = 'fleet.vehicle.cost'
+
+  
+
+    date_time = fields.Datetime(string='Date Time', help='Date and time when the cost has been executed')
+    # modific campul din data in datatimp ?
+    #date = fields.Date(string='Date', help='Date and time when the cost has been executed',compute='_compute_get_date', inverse='_compute_set_date', store=True)
+    year = fields.Char(string='Year', store=True, compute='_compute_year' )
+    
+    
+    @api.one
+    @api.depends('date')
+    def _compute_year(self):   
+        if self.date:
+            self.year =  str(fields.Date.from_string(self.date).year)
+    
+    @api.multi
+    def write(self, vals):
+        if 'date_time' in vals and 'date' not in vals:
+            vals['date'] = vals['date_time']
+        if 'date' in vals and 'date_time' not in vals:
+            vals['date_time'] = vals['date']
+        res = super(fleet_vehicle_cost,self).write(vals)
+        return res
+
+
+
+class fleet_vehicle_odometer(models.Model):
+    _inherit = 'fleet.vehicle.odometer'  
+    
+    date_time = fields.Datetime(string='Date Time')
+    real = fields.Boolean(string='Is real', default=fields.Datetime.now )
+    
+        
+    @api.multi
+    def write(self, vals ):
+        if 'date_time' in vals and 'date' not in vals:
+            vals['date'] = vals['date_time']
+        if 'date' in vals and 'date_time' not in vals:
+            vals['date_time'] = vals['date']
+        res = super(fleet_vehicle_odometer,self).write(  vals )
+        return res 
+       
+
+
+
+class fleet_route(models.Model):
+    _name = 'fleet.route'
+    _description = 'Route'  
+
+
+    name        = fields.Char(string='Name', store=False, compute='_compute_name')
+    from_loc_id = fields.Many2one('fleet.location', string='From', help='From location', required=True)
+    to_loc_id   = fields.Many2one('fleet.location', string='To',   help='To location',   required=True) 
+    distance  = fields.Float('Distance')
+    duration  = fields.Float('Duration')    
+
+    
+    @api.one
+    @api.depends('from_loc_id.name','to_loc_id.name')
+    def _compute_name(self):    
+        self.name = self.from_loc_id.name + '-' + self.to_loc_id.name     
+    
+
+
+class fleet_card(models.Model):
+    _name = 'fleet.card'
+    _description = 'Fuel Card'
+    
+    name = fields.Char(string='Series card',  size=20, required=True)
+    type_card = fields.Selection([('2', 'Own pomp'),('3','Rompetrol'),('4','Petrom'),('5','Lukoil'),('6','OMV')], string = 'Type Card' ) 
+    vehicle_ids = fields.Many2many('fleet.vehicle', 'fleet_card_vehicle_rel', 'card_id', 'vehicle_id', string='Vehicles')
+    log_fuel_ids = fields.One2many('fleet.vehicle.log.fuel','card_id',string='Fuel log')
+    active =  fields.Boolean(string='Active',default=1)
+    
+
+
+    _sql_constraints = [  ('serie_uniq', 'unique (name)', 'The series must be unique !') ]
+    
  
 
 
-
-class fleet_route(osv.osv):
-    _name = 'fleet.route'
-    _description = 'Route'  
-     
-    def _route_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = record.from_loc_id.name + '-' + record.to_loc_id.name  
-        return res   
+class fleet_fuel(models.Model):
+    _name = 'fleet.fuel'
+    _description = 'Fuel'
     
-    _columns = {
-        'name':         fields.function(_route_name_get_fnc, type="char", string='Name', store=False),
-        'from_loc_id':  fields.many2one('fleet.location', 'From', help='From location', required=True),
-        'to_loc_id':    fields.many2one('fleet.location', 'To',   help='To location', required=True),
-        'distance':     fields.float('Distance'),  
-        'duration':     fields.float('Duration'),      
-    }    
+    name = fields.Char(string='Fuel',  size=75, required=True) 
+    fuel_type = fields.Selection([('gasoline', 'Gasoline'), ('diesel', 'Diesel')], string = 'Fuel Type' )    
+    
+ 
 
+class fleet_scope(models.Model):
+    _name = 'fleet.scope'
+    _description = 'Scope'
+    
+    name = fields.Char(string='Scope',  size=75, required=True) 
+    
+ 
+ 
 
-class fleet_location(osv.osv):
+class fleet_location(models.Model):
     'Pozitia unei locatii si afisare pozitie pe Google Maps'
     _name = 'fleet.location'
     _description = 'Location'
-    _columns = {
-        'name':     fields.char('Location', size=100, required=True),
-        'type':     fields.selection([('0', 'Other'),('1', 'Partner'),('2','Station')], 'Type'),  
-    }     
-    _defaults = {
-        'type': 0,  
-    }
-
+    
+    
+    name = fields.Char(string='Location',  size=100, required=True) 
+    type = fields.Selection([ ('0','Other'),  ('1','Partner'),   ('2','Station')], string = 'Type',
+              default=lambda self: self._context.get('type', 'out_invoice')  )
 
 
 
@@ -786,32 +776,33 @@ class fleet_location(osv.osv):
 class fleet_location_type(osv.osv):
     _name = 'fleet.location.type'
     _description = 'Location type'
-    _columns = {
-        'name':     fields.char('Type', size=100, required=True),
-    }    
-fleet_location_type()
+    
+    name = fields.Char(string='Type',  size=100, required=True) 
+   
+ 
 """
   
-class fleet_vehicle_category(osv.osv):
+
+
+class fleet_vehicle_category(models.Model):
     _name = 'fleet.vehicle.category'
     _description = 'Vehicle Category'
-    _columns = {
-        'name':     fields.char('Category',  size=100, required=True),  
-        'code':     fields.char('Cod',   size=4, required=True),                         
-    }
-fleet_vehicle_category()
+    
+    name = fields.Char(string='Category',  size=100, required=True) 
+    code = fields.Char(string='Cod',  size=4, required=True) 
 
 
-  
-class fleet_reservoir_level(osv.osv):  
+
+class fleet_reservoir_level(models.Model):  
     _name = 'fleet.reservoir.level'
     _description = 'Fleet Reservoir Level'
-    _columns = {
-        'date':         fields.datetime('Date', required=True),         
-        'vehicle_id':   fields.many2one('fleet.vehicle', 'Vehicle', required=True),
-        'liter':        fields.float('Liter'),                    
-    } 
-
+    
+    date = fields.Date(string='Date', required=True)
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', required=True)
+    liter =   fields.Float('Liter')
+     
+ 
+    
     def get_level(self,cr, uid, vehicle_id, context=None):
         level = 0.0
         cr.execute("""SELECT  sum(liter) AS liter
@@ -840,7 +831,7 @@ class fleet_reservoir_level(osv.osv):
         cr.execute("""SELECT  sum(liter) AS liter
               FROM fleet_vehicle_log_fuel join fleet_vehicle_cost on fleet_vehicle_log_fuel.cost_id = fleet_vehicle_cost.id
               WHERE vehicle_id = %s and
-                   date <= %s
+                   date_time <= %s
            """,
            (vehicle_id,  ToDate,))
         results = cr.dictfetchone()
@@ -862,9 +853,8 @@ class fleet_reservoir_level(osv.osv):
       
 
            
-fleet_reservoir_level()
+
+ 
 
 
-
-    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

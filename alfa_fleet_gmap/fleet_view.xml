@@ -3,7 +3,19 @@
 	<data>
 
 		<!-- inherit view -->
-
+		<!-- Location -->
+		<record id='fleet_location_tree' model='ir.ui.view' >
+			<field name="name">fleet.location.tree</field>
+			<field name="model">fleet.location</field>
+			<field name="inherit_id" ref="alfa_fleet.fleet_location_tree" />
+			<field name="arch" type="xml">
+				<tree string="Location" position="attributes">
+					<attribute name="editable"></attribute>
+				</tree>
+			</field>
+		</record>
+		
+		
 		<record id="fleet_location_form" model="ir.ui.view">
 			<field name="name">fleet.location.form</field>
 			<field name="model">fleet.location</field>
@@ -33,8 +45,19 @@
 			</field>
 		</record>
 
-
-
+		<!-- Route -->
+		<record id='fleet_route_tree' model='ir.ui.view' >
+			<field name="name">fleet.route.tree</field>
+			<field name="model">fleet.route</field>
+			<field name="inherit_id" ref="alfa_fleet.fleet_route_tree" />
+			<field name="arch" type="xml">
+				<tree string="Route" position="attributes">
+					<attribute name="editable"></attribute>
+				</tree>			
+			</field>
+		</record>
+		
+		
 		<record id='fleet_route_form' model='ir.ui.view'>
 			<field name="name">fleet.route.form</field>
 			<field name="model">fleet.route</field>
