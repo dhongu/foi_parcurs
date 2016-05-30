@@ -32,7 +32,7 @@ Acest modul este o extensie a aplicatiei de gestiune parc auto.
 
 Main Features
 -------------
-* Campuri suplimentare in pentru detele de baza ale unui vehicul.
+* Campuri suplimentare in  detele de baza ale unui vehicul.
         * indicativ
         * sofer de rezerva
         * categorie
@@ -59,6 +59,7 @@ Campul data din fleet trebuie modificat in datatime
             "fleet_data.xml",
             "fleet_view.xml",
             "fleet_report.xml",
+            "views/report_map_sheet.xml",
             'security/ir.model.access.csv'
     ],
     

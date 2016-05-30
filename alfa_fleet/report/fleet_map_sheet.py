@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008 Deltatech All Rights Reserved
+# Copyright (c) 2015 Deltatech All Rights Reserved
 #                    Dorin Hongu <dhongu(@)gmail(.)com       
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,9 @@ import time
 from openerp.report import report_sxw
 from openerp.osv import osv
 from openerp import pooler
+ 
+
+
 
 class map_sheet(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -32,7 +35,15 @@ class map_sheet(report_sxw.rml_parse):
             'time': time,
         })
 
-report_sxw.report_sxw('report.fleet.map.sheet.list','fleet.map.sheet','addons/alfa_fleet/report/fleet_map_sheet.rml',parser=map_sheet,header='internal')
+
+
+        
+    
+class report_map_sheet(osv.AbstractModel):
+    _name = 'report.alfa_fleet.report_map_sheet'
+    _inherit = 'report.abstract_report'
+    _template = 'alfa_fleet.report_map_sheet'
+    _wrapped_report_class = map_sheet
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

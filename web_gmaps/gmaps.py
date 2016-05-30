@@ -19,26 +19,25 @@
 #
 ##############################################################################
 
-
-from openerp.osv import fields, osv
+from openerp import models, fields, api, _
+#from openerp.osv import fields, osv
 import openerp.addons.base as base
  
 
-
-
-if 'gmaps' not in base.ir.ir_actions.VIEW_TYPES:
-    base.ir.ir_actions.VIEW_TYPES.append(('gmaps', 'GMaps'))
-
-
-
-
 GEO_VIEW = ('gmaps', 'GMaps')
 
-class IrUIView(osv.osv):
+if 'gmaps' not in base.ir.ir_actions.VIEW_TYPES:
+    base.ir.ir_actions.VIEW_TYPES.append(GEO_VIEW )
+
+
+class IrUIView(models.Model):
     _inherit = 'ir.ui.view'
 
+    type = fields.Selection(selection_add=[GEO_VIEW])
+    
+    """
     def __init__(self, pool, cursor):
-        """Hack due to the lack of selection fields inheritance mechanism."""
+        #Hack due to the lack of selection fields inheritance mechanism.
         super(IrUIView, self).__init__(pool, cursor)
         #type_selection = self._columns['type'].selection
         if self._columns:
@@ -49,6 +48,7 @@ class IrUIView(osv.osv):
                 tmp.sort()
                 self._columns['type'].selection = tuple(set(tmp))
 
+    
     _columns = {
         'type': fields.selection([
             ('tree','Tree'),
@@ -62,4 +62,5 @@ class IrUIView(osv.osv):
             ('gmaps', 'GMaps'),
             ('qweb', 'QWeb')], string='View Type'),
     }
+    """
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

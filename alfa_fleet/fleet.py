@@ -442,9 +442,7 @@ class fleet_route_log(models.Model):
     _name = 'fleet.route.log'
     _description = 'Route Log'
 
-
-    
-    
+ 
     @api.model
     def _get_default_date_begin(self):
         res = None
@@ -474,7 +472,7 @@ class fleet_route_log(models.Model):
         return  res
     """
 
-    
+ 
     name       = fields.Char(compute='_compute_route_name', string="Name", store=False)
     scope_id   =  fields.Many2one('fleet.scope', string='Scope', states={'done':[('readonly',True)]})
     date_begin = fields.Datetime(string='Date Begin', states={'done':[('readonly',True)]}, default=_get_default_date_begin)
@@ -544,27 +542,47 @@ class fleet_route_log(models.Model):
     ]
     """
     
-    def on_change_route(self, cr, uid, ids, route_id, distance, date_begin, context=None):
-        if not route_id:
-            return {}
-        if not date_begin:
-            return {}
-        route = self.pool.get('fleet.route').browse(cr, uid, route_id, context=context)
+    @api.multi
+    def on_change_route(self, route_id, distance, date_begin,):
         
+        context = self.env.context
+        domain = []
+        if context and 'route_log_ids' in context:
+            route_log_ids = context['route_log_ids']
+            prev_route_id = None
+            for route_log in  route_log_ids:            
+                if route_log[0] == 4:
+                     route_log_obj = self.browse(route_log[1])
+                     date_end = route_log_obj.date_end
+                     route_id = route_log_obj.route_id.id       
+                elif route_log[0] == 0 or route_log[0] == 1:
+                    values = route_log[2]
+                    if values and 'date_end' in values and route_id in values :
+                        date_end = values['date_end']
+                        route_id = values['route_id']
+                if date_end <= self.date_begin :             
+                    prev_route_id = route_id  
+            if prev_route_id:
+                 prev_route = self.env['fleet.route'].browse(prev_route_id)
+                 domain = domain.append(('from_loc_id','=',prev_route.to_loc_id.id)) 
         
-         
-        date_int = fields.Datetime.from_string(date_begin)
-        week_day = int(date_int.strftime('%w'))
-        date_end = date_int  # datetime.strptime(date_begin,tools.DEFAULT_SERVER_DATETIME_FORMAT) 
-        date_end = date_end + timedelta(hours=int(math.floor(route.duration)), minutes=int((route.duration%1) * 60) )
-        date_end = fields.Datetime.to_string(date_end)    # datetime.strftime(date_end,tools.DEFAULT_SERVER_DATETIME_FORMAT)
-       
-        return {
-            'value': {
+        value = {}
+        if route_id and date_begin:
+            route = self.env['fleet.route'].browse( route_id )   
+            date_int = fields.Datetime.from_string(date_begin)
+            week_day = int(date_int.strftime('%w'))
+            date_end = date_int  # datetime.strptime(date_begin,tools.DEFAULT_SERVER_DATETIME_FORMAT) 
+            date_end = date_end + timedelta(hours=int(math.floor(route.duration)), minutes=int((route.duration%1) * 60) )
+            date_end = fields.Datetime.to_string(date_end)    # datetime.strftime(date_end,tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            value = {
                 'distance': route.distance,
                 'date_end': date_end,
                 'week_day': week_day
             }
+       
+        return {
+            'value': value,
+            'domain':{'route_id':domain}
         }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -714,15 +732,24 @@ class fleet_route(models.Model):
     name        = fields.Char(string='Name', store=False, compute='_compute_name')
     from_loc_id = fields.Many2one('fleet.location', string='From', help='From location', required=True)
     to_loc_id   = fields.Many2one('fleet.location', string='To',   help='To location',   required=True) 
-    distance  = fields.Float('Distance')
-    duration  = fields.Float('Duration')    
+    distance    = fields.Float('Distance')
+    duration    = fields.Float('Duration')
+    reverse     = fields.Many2one('fleet.route', string='Reverse route')  
 
     
     @api.one
     @api.depends('from_loc_id.name','to_loc_id.name')
     def _compute_name(self):    
         self.name = self.from_loc_id.name + '-' + self.to_loc_id.name     
-    
+
+    @api.multi
+    def button_create_reverse(self):
+        for route in self:
+            if not route.reverse:
+                new_route = route.copy({'from_loc_id':route.to_loc_id.id, 
+                                        'to_loc_id':route.from_loc_id.id,
+                                        'reverse':route.id})
+                route.reverse = new_route
 
 
 class fleet_card(models.Model):
@@ -767,8 +794,7 @@ class fleet_location(models.Model):
     
     
     name = fields.Char(string='Location',  size=100, required=True) 
-    type = fields.Selection([ ('0','Other'),  ('1','Partner'),   ('2','Station')], string = 'Type',
-              default=lambda self: self._context.get('type', 'out_invoice')  )
+    type = fields.Selection([ ('0','Other'),  ('1','Partner'),   ('2','Station')], string = 'Type'   )
 
 
 

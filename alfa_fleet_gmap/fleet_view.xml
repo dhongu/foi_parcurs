@@ -77,11 +77,11 @@
 						<field name="to_lng" />
 
 					</field>
-					<group position="after">
+					<div id="map" position="replace">
 						<button name="action_get_distance_duration" type="object"
 							string="Get Distance Duration" />
 						<widget type="gmap_route" from_lat="from_lat" from_lng="from_lng" to_lat="to_lat" to_lng="to_lng" />
-					</group>
+					</div>
 				</data>
 
 			</field>
@@ -116,7 +116,7 @@
 			<field name="name">Locations</field>
 			<field name="res_model">fleet.location</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree,form,gmaps</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">Click to create a new location.</p>
 			</field>

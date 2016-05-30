@@ -67,6 +67,7 @@ def get_url(url):
     """Return a string of a get url query"""
     try:
         import urllib
+        
         objfile = urllib.urlopen(url)
         rawfile = objfile.read()
         objfile.close()
@@ -140,7 +141,7 @@ class fleet_location(osv.osv):
 
     def action_get_lat_lng(self, cr, uid, ids, context=None):
         for loc in self.browse(cr, uid, ids, context=context):
-            url = 'http://maps.googleapis.com/maps/api/geocode/xml?address=' + loc.name
+            url = 'http://maps.googleapis.com/maps/api/geocode/xml?address=' + urllib.quote(loc.name)
             rawfile = get_url(url)
             dom = etree.fromstring(rawfile)
             try:
@@ -148,6 +149,7 @@ class fleet_location(osv.osv):
                 lng = dom.xpath('//location/lng')[0].text
                 self.write(cr, uid, loc.id, {'lat':lat, 'lng':lng})
             except:
+                print url
                 raise osv.except_osv('Error !', 'Unable to get location !')
         return
 

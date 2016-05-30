@@ -229,7 +229,7 @@ instance.web.views.add('gmaps', 'instance.web_gmaps.gmaps');
  
 instance.web_gmaps.gmaps = instance.web.View.extend({
 
-     template: 'Gmaps',
+     template: 'gmaps',
 
      init: function(parent, dataset, view_id, options) {
          this._super(parent);
@@ -254,7 +254,7 @@ instance.web_gmaps.gmaps = instance.web.View.extend({
          //_.each(data.geoengine_layers.actives, function(item) {
          //    self.geometry_columns[item.geo_field_id[1]] = true;
          //});
-         this.$el.html(QWeb.render("Gmaps", {"fields_view": this.fields_view, 'elem_id': this.elem_id}));
+         this.$el.html(QWeb.render("gmaps", {"fields_view": this.fields_view, 'elem_id': this.elem_id}));
 
          
          if (typeof google== 'undefined') {

@@ -21,7 +21,7 @@
 					<field name="name" />
 					<field name="vehicle_id" />
 					<field name="start_date"/>
-					<field name="expiration_date">
+					<field name="expiration_date"/>
 				</tree>
 			</field>
 		</record>
