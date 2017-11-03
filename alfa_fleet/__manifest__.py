@@ -57,7 +57,8 @@ Campul data din fleet trebuie modificat in datatime
     """,
     "data" : [
             "fleet_data.xml",
-            "fleet_view.xml",
+            "views/fleet_view.xml",
+            "views/fleet_sheet_view.xml",
             "fleet_report.xml",
             "views/report_map_sheet.xml",
             'security/ir.model.access.csv'

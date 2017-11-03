@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 10.0e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-24 10:22+0000\n"
-"PO-Revision-Date: 2015-05-24 10:22+0000\n"
+"POT-Creation-Date: 2017-11-03 06:26+0000\n"
+"PO-Revision-Date: 2017-11-03 06:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,62 +16,180 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: alfa_fleet
-#: model:ir.actions.act_window,help:alfa_fleet.fleet_location_act
-msgid "<p class=\"oe_view_nocontent_create\">Click to create a new location.</p>\n"
-"			"
-msgstr "<p class=\"oe_view_nocontent_create\">Clic pentru a crea o nouă locație.</p>\n"
-"			"
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_form
+msgid "(create)"
+msgstr "(creare)"
 
 #. module: alfa_fleet
-#: model:ir.actions.act_window,help:alfa_fleet.fleet_map_sheet_act
-msgid "<p class=\"oe_view_nocontent_create\">Click to create a new map sheet.</p>\n"
-"				<p>Here you can add map sheet for all vehicles.</p>\n"
-"			"
-msgstr "<p class=\"oe_view_nocontent_create\">Clic pentru a crea o nouă foaie de parcurs.</p>\n"
-"				<p>Aici puteți adăuga foi de parcurs pentru toate vehiculele.</p>\n"
-"			"
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<span>Map Sheet:</span>"
+msgstr "<span>Foaie Parcurs:</span>"
 
 #. module: alfa_fleet
-#: model:ir.actions.act_window,help:alfa_fleet.fleet_route_act
-msgid "<p class=\"oe_view_nocontent_create\">Click to create a new route.</p>\n"
-"			"
-msgstr "<p class=\"oe_view_nocontent_create\">Faceți click pentru un nou traseu.</p>\n"
-"			"
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Amount</strong>"
+msgstr "<strong>Valoare</strong>"
 
 #. module: alfa_fleet
-#: field:fleet.card,active:0
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Average consumption:</strong>"
+msgstr "<strong>Consum mediu:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Category:</strong>"
+msgstr "<strong>Categorie:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Company:</strong>"
+msgstr "<strong>Compania:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Cons.</strong>"
+msgstr "<strong>Cons.</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Data begin</strong>"
+msgstr "<strong>Dată început</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Data end</strong>"
+msgstr "<strong>Dată final</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Data:</strong>"
+msgstr "<strong>Dată:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Data</strong>"
+msgstr "<strong>Data</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Distance</strong>"
+msgstr "<strong>Distanța</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Driver:</strong>"
+msgstr "<strong>Șofer:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Fuel log:</strong>"
+msgstr "<strong>Consum combustibil:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Invoice ref</strong>"
+msgstr "<strong>Ref Factură</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Liter</strong>"
+msgstr "<strong>Liter</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Normal consumption:</strong>"
+msgstr "<strong>Normal consumption:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Odometer start:</strong>"
+msgstr "<strong>Odometer start:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Price</strong>"
+msgstr "<strong>Price</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Reservoir lever start:</strong>"
+msgstr "<strong>Reservoir lever start:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Route log:</strong>"
+msgstr "<strong>Route log:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Route</strong>"
+msgstr "<strong>Route</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Scope</strong>"
+msgstr "<strong>Scope</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Start date:</strong>"
+msgstr "<strong>Start date:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Start end:</strong>"
+msgstr "<strong>Start end:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Total amount:</strong>"
+msgstr "<strong>Total amount:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Total distance:</strong>"
+msgstr "<strong>Total distance:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
+
+#. module: alfa_fleet
+#: model:ir.ui.view,arch_db:alfa_fleet.report_map_sheet
+msgid "<strong>Vehicle:</strong>"
+msgstr "<strong>Vehicle:</strong>"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_active
 msgid "Active"
-msgstr "Activ"
+msgstr "Activ(a)"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Amount"
-msgstr "Valoare"
-
-#. module: alfa_fleet
-#: field:fleet.vehicle,avg_cons:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_avg_cons
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_avg_cons
 msgid "Average Consumption"
 msgstr "Consum mediu"
 
 #. module: alfa_fleet
-#: field:fleet.vehicle,avg_speed:0
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
+msgid "Average Price"
+msgstr "Preț mediu"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_avg_speed
 msgid "Average Speed"
 msgstr "Viteza medie"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Average consumption:"
-msgstr "Consumul mediu:"
-
-#. module: alfa_fleet
-#: field:fleet.map.sheet,driver2_id:0
-#: field:fleet.vehicle,driver2_id:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_driver2_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_driver2_id
 msgid "Backup Driver"
 msgstr "Șofer rezervă"
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,driver2_id:0
-#: help:fleet.vehicle,driver2_id:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_driver2_id
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_vehicle_driver2_id
 msgid "Backup driver of the vehicle"
 msgstr "Șofer de rezervă"
 
@@ -81,76 +199,74 @@ msgid "Cancelled"
 msgstr "Anulat"
 
 #. module: alfa_fleet
-#: code:addons/alfa_fleet/fleet.py:392
-#: code:addons/alfa_fleet/fleet_old.py:404
-#: code:addons/alfa_fleet/fleet_sheet.py:398
+#: code:addons/alfa_fleet/models/.tmp.py:348
+#: code:addons/alfa_fleet/models/fleet_sheet.py:382
 #, python-format
 msgid "Cannot delete a map sheet which is in state '%s'."
 msgstr "Nu se poate șterge o foaie de parcurs în starea '%s'."
 
 #. module: alfa_fleet
-#: code:addons/alfa_fleet/fleet.py:576
+#: code:addons/alfa_fleet/models/fleet_sheet.py:597
 #, python-format
 msgid "Cannot delete a route log which is in state '%s'."
 msgstr "Nu se poate șterge un traseu parcurs în starea '%s'."
 
 #. module: alfa_fleet
-#: code:addons/alfa_fleet/fleet.py:428
-#: code:addons/alfa_fleet/fleet_old.py:440
-#: code:addons/alfa_fleet/fleet_sheet.py:437
+#: code:addons/alfa_fleet/models/.tmp.py:387
+#: code:addons/alfa_fleet/models/fleet_sheet.py:420
 #, python-format
 msgid "Cannot set done a map sheet which distance equal with zero."
-msgstr "Nu e poate închide o foaie de parcurs cu distanta egala u zero."
+msgstr "Cannot set done a map sheet which distance equal with zero."
 
 #. module: alfa_fleet
-#: field:fleet.vehicle.log.fuel,card_id:0
 #: model:ir.actions.act_window,name:alfa_fleet.fleet_card_act
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_fuel_card_id
 #: model:ir.ui.menu,name:alfa_fleet.fleet_card_menu
 msgid "Card"
 msgstr "Card"
 
 #. module: alfa_fleet
-#: view:fleet.card:alfa_fleet.fleet_card_form
-#: view:fleet.card:alfa_fleet.fleet_card_tree
-#: field:fleet.vehicle,card_ids:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_card_ids
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_card_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_card_tree
 msgid "Cards"
 msgstr "Carduri"
 
 #. module: alfa_fleet
-#: view:fleet.vehicle.category:alfa_fleet.fleet_vehicle_category_tree
-#: field:fleet.vehicle.category,name:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_name
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_vehicle_category_tree
 msgid "Category"
 msgstr "Categorie"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Category:"
-msgstr "Categorie:"
+#: model:ir.actions.act_window,help:alfa_fleet.fleet_location_act
+msgid "Click to create a new location."
+msgstr "Clic pentru a creea o nouă locație."
 
 #. module: alfa_fleet
-#: field:fleet.vehicle.category,code:0
+#: model:ir.actions.act_window,help:alfa_fleet.fleet_map_sheet_act
+msgid "Click to create a new map sheet."
+msgstr "Click to create a new map sheet."
+
+#. module: alfa_fleet
+#: model:ir.actions.act_window,help:alfa_fleet.fleet_route_act
+msgid "Click to create a new route."
+msgstr "Click to create a new route."
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_code
 msgid "Cod"
 msgstr "Cod"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,company_id:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_company_id
 msgid "Company"
-msgstr "Compania"
+msgstr "Companie"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Company:"
-msgstr "Compania:"
-
-#. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
 msgid "Confirm"
 msgstr "Confirmă"
-
-#. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Cons."
-msgstr "Cons."
 
 #. module: alfa_fleet
 #: model:ir.model,name:alfa_fleet.model_fleet_vehicle_cost
@@ -158,94 +274,80 @@ msgid "Cost related to a vehicle"
 msgstr "Costul asociat unui vehicul"
 
 #. module: alfa_fleet
-#: field:fleet.card,create_uid:0
-#: field:fleet.fuel,create_uid:0
-#: field:fleet.location,create_uid:0
-#: field:fleet.map.sheet,create_uid:0
-#: field:fleet.reservoir.level,create_uid:0
-#: field:fleet.route,create_uid:0
-#: field:fleet.route.log,create_uid:0
-#: field:fleet.scope,create_uid:0
-#: field:fleet.vehicle.category,create_uid:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_create_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel_create_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location_create_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_create_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_create_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_create_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_create_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_scope_create_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_create_uid
 msgid "Created by"
-msgstr "Created by"
+msgstr "Creat de"
 
 #. module: alfa_fleet
-#: field:fleet.card,create_date:0
-#: field:fleet.fuel,create_date:0
-#: field:fleet.location,create_date:0
-#: field:fleet.map.sheet,create_date:0
-#: field:fleet.reservoir.level,create_date:0
-#: field:fleet.route,create_date:0
-#: field:fleet.route.log,create_date:0
-#: field:fleet.scope,create_date:0
-#: field:fleet.vehicle.category,create_date:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_create_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel_create_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location_create_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_create_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_create_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_create_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_create_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_scope_create_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_create_date
 msgid "Created on"
-msgstr "Created on"
+msgstr "Creat în"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Data"
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_date
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_search
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_vehicle_log_fuel_view_search
+msgid "Date"
 msgstr "Data"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Data begin"
-msgstr "Data început"
-
-#. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Data end"
-msgstr "Dată sfârșit"
-
-#. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Data:"
-msgstr "Data:"
-
-#. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_search
-#: field:fleet.map.sheet,date:0
-#: field:fleet.reservoir.level,date:0
-#: view:fleet.vehicle.log.fuel:alfa_fleet.fleet_vehicle_log_fuel_search
-msgid "Date"
-msgstr "Dată"
-
-#. module: alfa_fleet
-#: field:fleet.route.log,date_begin:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_date_begin
 msgid "Date Begin"
 msgstr "Dată început"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,date_end:0
-#: field:fleet.route.log,date_end:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_date_end
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_date_end
 msgid "Date End"
 msgstr "Dată sfârșit"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,date_start:0
-#: field:fleet.map.sheet,date_start_old:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_date_start
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_date_start_old
 msgid "Date Start"
 msgstr "Dată început"
 
 #. module: alfa_fleet
-#: field:fleet.vehicle.cost,date_time:0
-#: field:fleet.vehicle.odometer,date_time:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_cost_date_time
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_contract_date_time
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_fuel_date_time
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_services_date_time
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_odometer_date_time
 msgid "Date Time"
 msgstr "Date oră"
 
 #. module: alfa_fleet
-#: help:fleet.vehicle.cost,date_time:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_vehicle_cost_date_time
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_vehicle_log_contract_date_time
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_vehicle_log_fuel_date_time
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_vehicle_log_services_date_time
 msgid "Date and time when the cost has been executed"
 msgstr "Data și ora când costul a fost efectuat"
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,date_end:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_date_end
 msgid "Date time at the end of this map sheet"
 msgstr "Data și ora de sfârșit a foii de parcurs"
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,date_start:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_date_start
 msgid "Date time at the start of this map sheet"
 msgstr "Data și ora de început a foii de parcurs"
 
@@ -255,17 +357,52 @@ msgid "Diesel"
 msgstr "Motorină"
 
 #. module: alfa_fleet
-#: field:fleet.route,distance:0
-#: field:fleet.route.log,distance:0
-#: view:website:alfa_fleet.report_map_sheet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_display_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel_display_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location_display_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_display_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_display_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_display_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_display_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_scope_display_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_dist_c1
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_dist_c1
+msgid "Dist C1"
+msgstr "Dist C1"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_dist_c2
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_dist_c2
+msgid "Dist C2"
+msgstr "Dist C2"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_dist_c3
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_dist_c3
+msgid "Dist C3"
+msgstr "Dist C3"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_distance
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_distance
 msgid "Distance"
 msgstr "Distanța"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_dist_echiv
+msgid "Distance "
+msgstr "Distanța "
+
+#. module: alfa_fleet
 #: selection:fleet.map.sheet,state:0
 #: selection:fleet.route.log,state:0
 #: selection:fleet.vehicle.log.fuel,state:0
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
 msgid "Done"
 msgstr "Gata"
 
@@ -277,29 +414,19 @@ msgid "Draft"
 msgstr "Ciornă"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,driver_id:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_driver_id
 msgid "Driver"
 msgstr "Șofer"
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,driver_id:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_driver_id
 msgid "Driver of the vehicle"
 msgstr "Șeferul acestui vehicul"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Driver:"
-msgstr "Șofer:"
-
-#. module: alfa_fleet
-#: field:fleet.route,duration:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_duration
 msgid "Duration"
-msgstr "Duration"
-
-#. module: alfa_fleet
-#: view:fleet.vehicle:alfa_fleet.alfa_fleet_form_view
-msgid "Engine Options"
-msgstr "Opțiuni Motor"
+msgstr "Durata"
 
 #. module: alfa_fleet
 #: model:ir.model,name:alfa_fleet.model_fleet_map_sheet
@@ -312,20 +439,20 @@ msgid "Fleet Reservoir Level"
 msgstr "Nivel carburant"
 
 #. module: alfa_fleet
-#: field:fleet.route,from_loc_id:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_from_loc_id
 msgid "From"
 msgstr "De la"
 
 #. module: alfa_fleet
-#: help:fleet.route,from_loc_id:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_route_from_loc_id
 msgid "From location"
 msgstr "Din locația"
 
 #. module: alfa_fleet
-#: view:fleet.fuel:alfa_fleet.fleet_fuel_tree
-#: field:fleet.fuel,name:0
-#: field:fleet.vehicle.log.fuel,fuel_id:0
 #: model:ir.model,name:alfa_fleet.model_fleet_fuel
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_fuel_fuel_id
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_fuel_tree
 msgid "Fuel"
 msgstr "Carburant"
 
@@ -335,19 +462,25 @@ msgid "Fuel Card"
 msgstr "Card combustibil"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
 msgid "Fuel Logs"
 msgstr "Alimentări carburant"
 
 #. module: alfa_fleet
-#: field:fleet.fuel,fuel_type:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel_fuel_type
 msgid "Fuel Type"
 msgstr "Tip Carburant"
 
 #. module: alfa_fleet
-#: view:fleet.card:alfa_fleet.fleet_card_form
-#: field:fleet.card,log_fuel_ids:0
-#: field:fleet.map.sheet,log_fuel_ids:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_reservoir_level_end
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_reservoir_level_start
+msgid "Fuel level in the reservoir at the beginning of road map"
+msgstr "Fuel level in the reservoir at the beginning of road map"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_log_fuel_ids
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_log_fuel_ids
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_card_form
 msgid "Fuel log"
 msgstr "Alimentări carburant"
 
@@ -357,12 +490,7 @@ msgid "Fuel log for vehicles"
 msgstr "Registru de combustibil pentru vehicule"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Fuel log:"
-msgstr "Alimentări:"
-
-#. module: alfa_fleet
-#: help:fleet.vehicle.log.fuel,full:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_vehicle_log_fuel_full
 msgid "Fuel supply was made up to full"
 msgstr "Alimentarea a fost făcută până la plin."
 
@@ -378,42 +506,46 @@ msgid "Gasoline"
 msgstr "Benzină"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
 msgid "Get fuel log"
 msgstr "Obține alimentări"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
 msgid "Get route log"
 msgstr "Obține traseele parcurse"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_search
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_search
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_search
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_search
 msgid "Group By..."
 msgstr "Grupați după..."
 
 #. module: alfa_fleet
-#: field:fleet.card,id:0
-#: field:fleet.fuel,id:0
-#: field:fleet.location,id:0
-#: field:fleet.map.sheet,id:0
-#: field:fleet.reservoir.level,id:0
-#: field:fleet.route,id:0
-#: field:fleet.route.log,id:0
-#: field:fleet.scope,id:0
-#: field:fleet.vehicle.category,id:0
-#: field:report.alfa_fleet.report_map_sheet,id:0
+#: model:ir.actions.act_window,help:alfa_fleet.fleet_map_sheet_act
+msgid "Here you can add map sheet for all vehicles."
+msgstr "Here you can add map sheet for all vehicles."
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_scope_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_id_2347
 msgid "ID"
 msgstr "ID"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,odometer_end_id:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_odometer_end_id
 msgid "ID Odometer end"
 msgstr "ID Kilometraj sfârșit"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,odometer_start_id:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_odometer_start_id
 msgid "ID Odometer start"
 msgstr "ID Kilometraj start"
 
@@ -423,7 +555,7 @@ msgid "In Progress"
 msgstr "În progres"
 
 #. module: alfa_fleet
-#: field:fleet.vehicle,indicative:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_indicative
 msgid "Indicative"
 msgstr "Indicativ"
 
@@ -433,64 +565,80 @@ msgid "Information on a vehicle"
 msgstr "Informații despre un vehicul"
 
 #. module: alfa_fleet
-#: code:addons/alfa_fleet/fleet_old.py:404
-#: code:addons/alfa_fleet/fleet_old.py:440
-#, python-format
-msgid "Invalid Action!"
-msgstr "Acțiune invalidă!"
-
-#. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Invoice ref"
-msgstr "Număr factură"
-
-#. module: alfa_fleet
-#: field:fleet.vehicle.odometer,real:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_odometer_real
 msgid "Is real"
 msgstr "Este real"
 
 #. module: alfa_fleet
-#: field:fleet.card,write_uid:0
-#: field:fleet.fuel,write_uid:0
-#: field:fleet.location,write_uid:0
-#: field:fleet.map.sheet,write_uid:0
-#: field:fleet.reservoir.level,write_uid:0
-#: field:fleet.route,write_uid:0
-#: field:fleet.route.log,write_uid:0
-#: field:fleet.scope,write_uid:0
-#: field:fleet.vehicle.category,write_uid:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card___last_update
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel___last_update
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location___last_update
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet___last_update
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level___last_update
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route___last_update
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log___last_update
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_scope___last_update
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category___last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_write_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel_write_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location_write_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_write_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_write_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_write_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_write_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_scope_write_uid
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Ultima actualizare făcută de"
 
 #. module: alfa_fleet
-#: field:fleet.card,write_date:0
-#: field:fleet.fuel,write_date:0
-#: field:fleet.location,write_date:0
-#: field:fleet.map.sheet,write_date:0
-#: field:fleet.reservoir.level,write_date:0
-#: field:fleet.route,write_date:0
-#: field:fleet.route.log,write_date:0
-#: field:fleet.scope,write_date:0
-#: field:fleet.vehicle.category,write_date:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_write_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_fuel_write_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location_write_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_write_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_write_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_write_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_write_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_scope_write_date
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_write_date
 msgid "Last Updated on"
-msgstr "Last Updated on"
+msgstr "Ultima actualizare pe"
 
 #. module: alfa_fleet
-#: field:fleet.vehicle,loading_level:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_fuel_reservoir_level
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_reservoir_level
+msgid "Level Reservoir"
+msgstr "Nivel rezervor"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_reservoir_level_end
+msgid "Level Reservoir End"
+msgstr "Nivel rezervor la sfărșit"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_reservoir_level_start
+msgid "Level Reservoir Start"
+msgstr "Nivel rezervor la început"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_loading_level
 msgid "Level of loading"
 msgstr "Nivelul de încărcare"
 
 #. module: alfa_fleet
-#: field:fleet.reservoir.level,liter:0
-#: view:website:alfa_fleet.report_map_sheet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_liter
 msgid "Liter"
 msgstr "Litri"
 
 #. module: alfa_fleet
-#: view:fleet.location:alfa_fleet.fleet_location_form
-#: view:fleet.location:alfa_fleet.fleet_location_tree
-#: field:fleet.location,name:0
 #: model:ir.model,name:alfa_fleet.model_fleet_location
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location_name
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_location_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_location_tree
 msgid "Location"
 msgstr "Locația"
 
@@ -506,38 +654,33 @@ msgid "Lukoil"
 msgstr "Lukoil"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_calendar
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_gantt
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_search
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_tree
-#: field:fleet.route.log,map_sheet_id:0
-#: field:fleet.vehicle.log.fuel,map_sheet_id:0
 #: model:ir.actions.report.xml,name:alfa_fleet.fleet_map_sheet_list_report
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_map_sheet_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_fuel_map_sheet_id
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_calendar
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_gantt
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_search
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_tree
 msgid "Map Sheet"
 msgstr "Foaie Parcurs"
 
 #. module: alfa_fleet
-#: code:addons/alfa_fleet/fleet_sheet.py:231
+#: code:addons/alfa_fleet/models/fleet_sheet.py:234
 #, python-format
 msgid "Map Sheet end-date (%s) must be greater then start-date (%s)"
-msgstr "Data de final (%s) trebuie să fie mai mare decît data de start (%s)"
+msgstr "Map Sheet end-date (%s) must be greater then start-date (%s)"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Map Sheet:"
-msgstr "Foaie Parcurs:"
-
-#. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_graph
-#: view:fleet.vehicle:alfa_fleet.alfa_fleet_form_view
 #: model:ir.actions.act_window,name:alfa_fleet.fleet_map_sheet_act
 #: model:ir.ui.menu,name:alfa_fleet.fleet_map_sheet_menu
+#: model:ir.ui.view,arch_db:alfa_fleet.alfa_fleet_form_view
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_graph
 msgid "Map Sheets"
 msgstr "Foi parcurs"
 
 #. module: alfa_fleet
-#: field:fleet.vehicle,mass_cap:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_mass_cap
 msgid "Mass capacity"
 msgstr "Capacitate masică"
 
@@ -547,18 +690,20 @@ msgid "Master data"
 msgstr "Date de bază"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,norm_cons:0
-#: field:fleet.route.log,norm_cons:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_name
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_week_day
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_name
+msgid "Name"
+msgstr "Nume"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_norm_cons
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_norm_cons
 msgid "Normal Consumption"
 msgstr "Consum normat"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Normal consumption:"
-msgstr "Consum mormat:"
-
-#. module: alfa_fleet
-#: field:fleet.map.sheet,name:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_name
 msgid "Number"
 msgstr "Număr"
 
@@ -568,21 +713,14 @@ msgid "OMV"
 msgstr "OMV"
 
 #. module: alfa_fleet
-#: code:addons/alfa_fleet/fleet_old.py:200
-#, python-format
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_odometer_end
 msgid "Odometer End"
 msgstr "Kilometraj sfârșit"
 
 #. module: alfa_fleet
-#: code:addons/alfa_fleet/fleet_old.py:197
-#, python-format
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_odometer_start
 msgid "Odometer Start"
 msgstr "Kilometraj start"
-
-#. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Odometer end:"
-msgstr "Kilometraj la sfârșit:"
 
 #. module: alfa_fleet
 #: model:ir.model,name:alfa_fleet.model_fleet_vehicle_odometer
@@ -590,9 +728,14 @@ msgid "Odometer log for a vehicle"
 msgstr "Registrul Controrului de kilometraj pentru un vehicul"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Odometer start:"
-msgstr "Kilometraj la plecare"
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_odometer_end
+msgid "Odometer measure of the vehicle at the end of this map sheet"
+msgstr "Odometer measure of the vehicle at the end of this map sheet"
+
+#. module: alfa_fleet
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_odometer_start
+msgid "Odometer measure of the vehicle at the start of this map sheet"
+msgstr "Odometer measure of the vehicle at the start of this map sheet"
 
 #. module: alfa_fleet
 #: selection:fleet.location,type:0
@@ -616,24 +759,14 @@ msgid "Petrom"
 msgstr "Petrom"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Price"
-msgstr "Preț"
-
-#. module: alfa_fleet
-#: field:fleet.vehicle,reservoir:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_reservoir
 msgid "Reservoir capacity"
 msgstr "Capacitate rezervor"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Reservoir lever end:"
-msgstr "Nivel rezervor la stârșit:"
-
-#. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Reservoir lever start:"
-msgstr "Nivel rezervor la plecare:"
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_reverse
+msgid "Reverse route"
+msgstr "Reverse route"
 
 #. module: alfa_fleet
 #: selection:fleet.card,type_card:0
@@ -641,37 +774,31 @@ msgid "Rompetrol"
 msgstr "Rompetrol"
 
 #. module: alfa_fleet
-#: view:fleet.route:alfa_fleet.fleet_route_form
-#: view:fleet.route:alfa_fleet.fleet_route_tree
-#: field:fleet.route.log,route_id:0
 #: model:ir.model,name:alfa_fleet.model_fleet_route
-#: view:website:alfa_fleet.report_map_sheet
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_route_id
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_tree
 msgid "Route"
 msgstr "Traseu"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_calendar
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_form
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_search
 #: model:ir.actions.act_window,name:alfa_fleet.fleet_route_log_act
 #: model:ir.model,name:alfa_fleet.model_fleet_route_log
 #: model:ir.ui.menu,name:alfa_fleet.fleet_route_log_menu
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_calendar
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_search
 msgid "Route Log"
 msgstr "Traseu parcurs"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,route_log_ids:0
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_form
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_gantt
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_tree
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_route_log_ids
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_gantt
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_tree
 msgid "Route Logs"
 msgstr "Trasee parcurse"
-
-#. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Route log:"
-msgstr "Trasee parcurse:"
 
 #. module: alfa_fleet
 #: model:ir.actions.act_window,name:alfa_fleet.fleet_route_act
@@ -680,50 +807,44 @@ msgid "Routes"
 msgstr "Trasee"
 
 #. module: alfa_fleet
-#: field:fleet.route.log,scope_id:0
-#: view:fleet.scope:alfa_fleet.fleet_scope_tree
-#: field:fleet.scope,name:0
 #: model:ir.actions.act_window,name:alfa_fleet.fleet_scope_act
 #: model:ir.model,name:alfa_fleet.model_fleet_scope
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_scope_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_scope_name
 #: model:ir.ui.menu,name:alfa_fleet.fleet_scope_menu
-#: view:website:alfa_fleet.report_map_sheet
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_scope_tree
 msgid "Scope"
 msgstr "Scopul"
 
 #. module: alfa_fleet
-#: field:fleet.card,name:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_name
 msgid "Series card"
 msgstr "Serie card"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Start date:"
-msgstr "Dată start:"
-
-#. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Start end:"
-msgstr "Dată sfârșit:"
+#: model:ir.ui.view,arch_db:alfa_fleet.alfa_fleet_form_view
+msgid "Show map sheet for this vehicle"
+msgstr "afișează foile de parcurs pentru acest vehicul"
 
 #. module: alfa_fleet
 #: selection:fleet.location,type:0
 msgid "Station"
-msgstr "Station"
+msgstr "Stație"
 
 #. module: alfa_fleet
-#: field:fleet.map.sheet,state:0
-#: field:fleet.route.log,state:0
-#: field:fleet.vehicle.log.fuel,state:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_state
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_state
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_fuel_state
 msgid "Status"
 msgstr "Stare"
 
 #. module: alfa_fleet
-#: help:fleet.vehicle,tachometer:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_vehicle_tachometer
 msgid "Status of tachometer"
 msgstr "Stare tahometru"
 
 #. module: alfa_fleet
-#: field:fleet.vehicle,tachometer:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_tachometer
 msgid "Tachometer"
 msgstr "Tahometru"
 
@@ -733,8 +854,8 @@ msgid "The Indicative must be unique !"
 msgstr "Indicativul trebuie să fie unic."
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,norm_cons:0
-#: help:fleet.route.log,norm_cons:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_norm_cons
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_route_log_norm_cons
 msgid "The Normal Consumption"
 msgstr "Consumul normat"
 
@@ -744,144 +865,125 @@ msgid "The series must be unique !"
 msgstr "Seria trebuie să fie unică !"
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,amount_total:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_amount_total
 msgid "The total amount for fuel"
 msgstr "Valoare totală a combustibilului"
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,distance_total:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_distance_total
 msgid "The total distance"
 msgstr "Distanța totală"
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,liter_total:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_liter_total
 msgid "The total liters"
 msgstr "Total litri"
 
 #. module: alfa_fleet
-#: field:fleet.route,to_loc_id:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_to_loc_id
 msgid "To"
 msgstr "La"
 
 #. module: alfa_fleet
-#: field:fleet.vehicle.log.fuel,full:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_fuel_full
 msgid "To full"
 msgstr "Plin"
 
 #. module: alfa_fleet
-#: help:fleet.route,to_loc_id:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_route_to_loc_id
 msgid "To location"
 msgstr "La locația"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Total"
-msgstr "Total"
-
-#. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
-#: field:fleet.map.sheet,amount_total:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_amount_total
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
 msgid "Total Amount"
 msgstr "Valoare totală"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_form
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_tree
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_tree
 msgid "Total Distance"
 msgstr "Distanța totală"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_form
-#: field:fleet.map.sheet,liter_total:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_liter_total
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_form
 msgid "Total Liter"
 msgstr "Total litri"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_tree
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_form
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_tree
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_tree
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_tree
 msgid "Total Normal Consumption"
 msgstr "Consumul normat"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_tree
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_tree
 msgid "Total Odometer"
 msgstr "Kilometraj total"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Total amount:"
-msgstr "Valoare totală:"
-
-#. module: alfa_fleet
-#: field:fleet.map.sheet,distance_total:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_distance_total
 msgid "Total distance"
 msgstr "Distanța totală"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Total distance:"
-msgstr "Distanța totală:"
-
-#. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_tree
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_tree
 msgid "Total liter"
 msgstr "Total litri"
 
 #. module: alfa_fleet
-#: view:fleet.card:alfa_fleet.fleet_card_form
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_card_form
 msgid "Total liters"
 msgstr "Total litri"
 
 #. module: alfa_fleet
-#: field:fleet.location,type:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_location_type
 msgid "Type"
 msgstr "Tip"
 
 #. module: alfa_fleet
-#: field:fleet.card,type_card:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_type_card
 msgid "Type Card"
 msgstr "Tip Card"
 
 #. module: alfa_fleet
-#: view:fleet.map.sheet:alfa_fleet.fleet_map_sheet_search
-#: field:fleet.map.sheet,vehicle_id:0
-#: help:fleet.map.sheet,vehicle_id:0
-#: field:fleet.reservoir.level,vehicle_id:0
-#: view:fleet.route.log:alfa_fleet.fleet_route_log_search
-#: field:fleet.route.log,vehicle_id:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_vehicle_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_reservoir_level_vehicle_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_route_log_vehicle_id
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_vehicle_id
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_map_sheet_search
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_route_log_search
 msgid "Vehicle"
 msgstr "Vehicul"
 
 #. module: alfa_fleet
-#: field:fleet.vehicle,category_id:0
 #: model:ir.actions.act_window,name:alfa_fleet.fleet_vehicle_category_act
 #: model:ir.model,name:alfa_fleet.model_fleet_vehicle_category
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_map_sheet_category_id
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_category_id
 #: model:ir.ui.menu,name:alfa_fleet.fleet_vehicle_category_menu
 msgid "Vehicle Category"
 msgstr "Categorie vehicul"
 
 #. module: alfa_fleet
-#: view:website:alfa_fleet.report_map_sheet
-msgid "Vehicle:"
-msgstr "Vehicul:"
-
-#. module: alfa_fleet
-#: view:fleet.card:alfa_fleet.fleet_card_form
-#: field:fleet.card,vehicle_ids:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_card_vehicle_ids
+#: model:ir.ui.view,arch_db:alfa_fleet.fleet_card_form
 msgid "Vehicles"
 msgstr "Vehicule"
 
 #. module: alfa_fleet
-#: help:fleet.vehicle.log.fuel,state:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_vehicle_log_fuel_state
 msgid "When the Log Fuel is created the status is set to 'Draft'.\n"
 "                                      When the Log Fuel is closed, the status is set to 'Done'."
 msgstr "Când o Alimentare este creată aceasta este în starea 'Ciornă'.\n"
 "                                      Când o alimentare este închisă, starea este setata cu 'Gata'."
 
 #. module: alfa_fleet
-#: help:fleet.map.sheet,state:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_map_sheet_state
 msgid "When the Map Sheet is created the status is set to 'Draft'.\n"
 "                                      When the Map Sheet is in progress the status is set to 'In Progress' .\n"
 "                                      When the Map Sheet is closed, the status is set to 'Done'."
@@ -890,19 +992,21 @@ msgstr "When the Map Sheet is created the status is set to 'Draft'.\n"
 "                                      When the Map Sheet is closed, the status is set to 'Done'."
 
 #. module: alfa_fleet
-#: help:fleet.route.log,state:0
+#: model:ir.model.fields,help:alfa_fleet.field_fleet_route_log_state
 msgid "When the Route Log is created the status is set to 'Draft'.\n"
 "                                      When the Route Log is closed, the status is set to 'Done'."
 msgstr "Când un 'Traseu parcurs' este creat starea este setată cu 'Ciornă'.\n"
 "                                      Când un 'Traseu parcurs' este alocat la o foaie de parcurs închisă, starea este setată cu 'Gata'."
 
 #. module: alfa_fleet
-#: field:fleet.vehicle.cost,year:0
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_cost_year
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_contract_year
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_fuel_year
+#: model:ir.model.fields,field_description:alfa_fleet.field_fleet_vehicle_log_services_year
 msgid "Year"
 msgstr "An"
 
 #. module: alfa_fleet
-#: view:fleet.vehicle:alfa_fleet.alfa_fleet_form_view
-msgid "show map sheet for this vehicle"
-msgstr "afișează foile de parcurs pentru acest vehicul"
-
+#: model:ir.model,name:alfa_fleet.model_report_alfa_fleet_report_map_sheet
+msgid "report.alfa_fleet.report_map_sheet"
+msgstr "report.alfa_fleet.report_map_sheet"

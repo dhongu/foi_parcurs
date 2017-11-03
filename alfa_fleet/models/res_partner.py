@@ -19,35 +19,31 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
 
+from odoo import models, api
 
-class res_partner(osv.osv):
+class res_partner(models.Model):
     _inherit = 'res.partner'
-    
-    def name_get(self, cr, uid, ids, context=None):
+
+    """
+    @api.multi
+    def name_get(self):
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
-        for record in self.browse(cr, uid, ids, context=context):
+        for record in self:
             name = record.name
             #if record.parent_id and not record.is_company:
             #    name =  "%s, %s" % (record.parent_id.name, name)
             if context.get('show_address'):
-                name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
+                name = name + "\n" + self._display_address( without_company=True, context=context)
                 name = name.replace('\n\n','\n')
                 name = name.replace('\n\n','\n')
             if context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
         return res
+    """
 
-
-res_partner()
-
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

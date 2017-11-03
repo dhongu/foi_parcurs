@@ -81,7 +81,7 @@
 				<p>Here you can add vehicle doc for all vehicles.</p>
 			</field>
 		</record>
-		<menuitem action="fleet_vehicle_doc_act" parent="fleet.fleet_vehicles" id="fleet_vehicle_doc_menu" groups="fleet.group_fleet_user"/>
+		<menuitem action="fleet_vehicle_doc_act" parent="fleet.fleet_vehicles" id="fleet_vehicle_doc_menu" groups="fleet.fleet_group_user"/>
 
 
 
