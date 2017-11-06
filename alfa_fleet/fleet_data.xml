@@ -16,21 +16,63 @@
             <field name="number_increment">10</field>
         </record>
 
+
+ERO_VE_M1	Autoturism
+ERO_VE_M2	Microbuz
+ERO_VE_M3	Autobuz
+ERO_VE_N1	Autoutilitara pana 3,5t
+ERO_VE_N2	Autoutilitara 3,5t-12t
+ERO_VE_N3	Autoutilitara peste 12t
+ERO_VE_O1	Remorca pana 0,75t
+ERO_VE_O2	Remorca  0,75-3,5t
+ERO_VE_O3	Remorca  3,5-10t
+ERO_VE_O4	Remorca  peste 10t
+
  
-        <!--
+
         <record id="id_category_M1" model="fleet.vehicle.category">
             <field name="name">Autoturism</field>
             <field name="code">M1</field>
-        </record>  
+        </record>
+        <record id="id_category_M2" model="fleet.vehicle.category">
+            <field name="name">Microbuz</field>
+            <field name="code">M2</field>
+        </record>
+        <record id="id_category_M3" model="fleet.vehicle.category">
+            <field name="name">Autobuz</field>
+            <field name="code">M3</field>
+        </record>
         <record id="id_category_N1" model="fleet.vehicle.category">
-            <field name="name">Autoutilitară < 3,5 t</field>
+            <field name="name">Autoutilitară până 3,5 t</field>
             <field name="code">N1</field>
         </record>
         <record id="id_category_N2" model="fleet.vehicle.category">
             <field name="name">Autoutilitară  (3,5 - 12 t)</field>
             <field name="code">N2</field>
         </record>
- 
+        <record id="id_category_N3" model="fleet.vehicle.category">
+            <field name="name">Autoutilitară peste 12t</field>
+            <field name="code">N3</field>
+        </record>
+
+
+        <record id="id_category_O1" model="fleet.vehicle.category">
+            <field name="name">Remorcă până 0,75t</field>
+            <field name="code">O1</field>
+        </record>
+        <record id="id_category_O2" model="fleet.vehicle.category">
+            <field name="name">Remorcă 0,75-3,5t</field>
+            <field name="code">O2</field>
+        </record>
+                <record id="id_category_O3" model="fleet.vehicle.category">
+            <field name="name">Remorcă 3,5-10t</field>
+            <field name="code">O3</field>
+        </record>
+        <record id="id_category_O4" model="fleet.vehicle.category">
+            <field name="name">Remorcă  peste 10t</field>
+            <field name="code">O4</field>
+        </record>
+
          <record id="id_location_home" model="fleet.location">
             <field name="name">Home</field>
         </record>  

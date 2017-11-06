@@ -158,6 +158,22 @@ class fleet_scope(models.Model):
     _description = 'Scope'
 
     name = fields.Char(string='Scope', size=75, required=True)
+    categ_id = fields.Many2one('fleet.scope.categ', string='Category')
+
+
+
+class fleet_scope_categ(models.Model):
+    _name = 'fleet.scope.categ'
+    _description = 'Scope'
+
+    name = fields.Char(string='Category',  required=True)
+
+
+class fleet_division(models.Model):
+    _name = 'fleet.division'
+    _description = 'Division'
+
+    name = fields.Char(string='Division',  required=True)
 
 
 class fleet_location(models.Model):

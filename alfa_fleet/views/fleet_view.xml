@@ -26,27 +26,64 @@
                 <field name="driver_id" position="before">
                     <field name="category_id"/>
                 </field>
+                <!--
                 <field name="driver_id" position="after">
                     <field name="driver2_id"/>
                 </field>
+                -->
+                <field name="vin_sn" position="after">
+                    <field name="engine_sn"/>
+                </field>
+                <field name="car_value" position="after">
+                    <field name="year_prod"/>
+                </field>
                 <field name="color" position="after">
                     <field name="mass_cap"/>
+                    <field name="weight"/>
+                    <!--
                     <field name="tachometer"/>
+                    -->
                     <field name="loading_level"/>
 
-                    <field name="reservoir_level"/>
-                    <field name="reservoir"/>
-                    <field name="avg_cons"/>
-                    <field name="avg_speed"/>
-
                 </field>
-                <!--
-                <group string="Engine Options" position="after">
-                    <group	colspan="4">
-                        <field name="card_ids"/>
-                    </group>
-                </group>
-                -->
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="Consumption">
+                            <group>
+                                <group>
+                                    <field name="reservoir_level"/>
+                                    <field name="reservoir"/>
+                                    <field name="avg_speed"/>
+                                </group>
+                                <group>
+                                    <field name="avg_cons_ex"/>
+                                    <field name="avg_cons_in"/>
+                                    <field name="avg_cons"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Allocation">
+                            <group>
+                                <group>
+                                    <field name="ownership_partner_id"/>
+                                    <field name="contract_partner_id"/>
+                                    <field name="utilized_partner_id"/>
+                                </group>
+                                <group>
+                                    <field name="allocation_mode"/>
+                                    <field name="division"/>
+                                    <field name="scope_id"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Cards">
+                            <field name="card_ids"/>
+                        </page>
+                    </notebook>
+
+                </xpath>
+
             </field>
         </record>
 
@@ -130,7 +167,7 @@
                             <field name="vehicle_id"/>
                             <field name="date_begin"/>
                             <field name="date_end"/>
-                            <field name="route_id" />
+                            <field name="route_id"/>
                             <field name="distance" sum="Total Distance"/>
                             <field name="norm_cons" sum="Total Normal Consumption"/>
                             <field name="map_sheet_id" context="{'vehicle_id':vehicle_id, 'date':date_begin}"/>
@@ -148,7 +185,7 @@
                     <field name="state"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
-                    <field name="route_id"  />
+                    <field name="route_id"/>
                     <field name="distance" sum="Total Distance"/>
                     <field name="norm_cons" sum="Total Normal Consumption"/>
                     <field name="map_sheet_id" context="{'vehicle_id':vehicle_id, 'date':date_begin}"/>

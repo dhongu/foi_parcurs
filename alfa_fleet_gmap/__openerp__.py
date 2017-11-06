@@ -22,10 +22,9 @@
     "name" : "Alfa Fleet Extension Google Maps",
     "version" : "1.0",
     "author" : "Dorin Hongu",
-    "category" : "Generic Modules",
-    "depends" : ["alfa_fleet", "web_gmaps"],
-    "init_xml" : [],
-    "demo_xml" : [],
+    "category" : 'Human Resources',
+    "depends" : ["alfa_fleet", "web_widget_google_maps"],
+
     "description" : """
 
     """,

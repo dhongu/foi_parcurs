@@ -9,9 +9,9 @@
 			<field name="model">fleet.location</field>
 			<field name="inherit_id" ref="alfa_fleet.fleet_location_tree" />
 			<field name="arch" type="xml">
-				<tree string="Location" position="attributes">
+				<xpath expr="//tree"  position="attributes">
 					<attribute name="editable"></attribute>
-				</tree>
+				</xpath>
 			</field>
 		</record>
 		
@@ -51,9 +51,9 @@
 			<field name="model">fleet.route</field>
 			<field name="inherit_id" ref="alfa_fleet.fleet_route_tree" />
 			<field name="arch" type="xml">
-				<tree string="Route" position="attributes">
+				<xpath expr="//tree"  position="attributes">
 					<attribute name="editable"></attribute>
-				</tree>			
+				</xpath>
 			</field>
 		</record>
 		

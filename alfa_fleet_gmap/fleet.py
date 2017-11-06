@@ -20,25 +20,17 @@
 ##############################################################################
 
 
-from datetime import datetime, timedelta, date
-from openerp.osv import fields, osv
-import time
-import pytz
-from openerp import tools
-import openerp.addons.decimal_precision as dp
-from libxslt import timestamp
-import math
-from openerp.tools.translate import _
+from odoo import models, fields, api, _
 from lxml import etree
+from odoo.exceptions import UserError
 
 import urllib
 import urllib2
+
 try:
     import json
 except ImportError:
     import simplejson as json
-from openerp.osv import orm
-
 
 
 def fetch_json(query_url, params={}, headers={}):
@@ -56,7 +48,7 @@ def fetch_json(query_url, params={}, headers={}):
     :rtype: (string, dict or array)
     
     """
-    encoded_params = urllib.urlencode(params)    
+    encoded_params = urllib.urlencode(params)
     url = query_url + encoded_params
     request = urllib2.Request(url, headers=headers)
     response = urllib2.urlopen(request)
@@ -67,15 +59,16 @@ def get_url(url):
     """Return a string of a get url query"""
     try:
         import urllib
-        
+
         objfile = urllib.urlopen(url)
         rawfile = objfile.read()
         objfile.close()
         return rawfile
     except ImportError:
-        raise osv.except_osv('Error !', 'Unable to import urllib !')
+        raise UserError('Unable to import urllib !')
     except IOError:
-        raise osv.except_osv('Error !', 'Web Service does not exist !')
+        raise UserError('Web Service does not exist !')
+
 
 class GoogleMaps(object):
     _DIRECTIONS_QUERY_URL = 'http://maps.googleapis.com/maps/api/directions/json?'
@@ -100,9 +93,9 @@ class GoogleMaps(object):
         url, response = fetch_json(self._DIRECTIONS_QUERY_URL, params=params)
         status_code = response['status']
         if status_code != 'OK':
-            raise orm.except_orm(_('ERROR !'), _('Impossible to access data'))
+            raise UserError(_('Impossible to access data'))
         return response
-    
+
     def duration(self, origin, destination, mode='driving', **kwargs):
         response = self.directions(origin, destination, mode, **kwargs)
         duration = 0
@@ -112,7 +105,7 @@ class GoogleMaps(object):
             if legs:
                 duration = legs[0].get('duration', {}).get('value', 0)
         return duration
-    
+
     def distance(self, origin, destination, mode='driving', **kwargs):
         response = self.directions(origin, destination, mode, **kwargs)
         distance = 0
@@ -123,53 +116,44 @@ class GoogleMaps(object):
                 distance = legs[0].get('distance', {}).get('value', 0)
         return distance
 
-class fleet_location(osv.osv):
+
+class fleet_location(models.Model):
     _inherit = 'fleet.location'
     'Pozitia unei locatii si afisare pozitie pe Google Maps'
-    _columns = {
-        'lat': fields.float('Latitude', digits=(9, 6)),
-        'lng': fields.float('Longitude', digits=(9, 6)),
-        'radius':fields.float('Radius'),                  # raza in km sau metri    
-    }     
 
+    lat = fields.Float('Latitude', digits=(9, 6))
+    lng = fields.Float('Longitude', digits=(9, 6))
+    radius = fields.Float('Radius', default=1.0)  # raza in km sau metri
 
-    _defaults = {
-        'radius': 1.0,  
-    }
-
- 
-
-    def action_get_lat_lng(self, cr, uid, ids, context=None):
-        for loc in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def action_get_lat_lng(self):
+        for loc in self:
             url = 'http://maps.googleapis.com/maps/api/geocode/xml?address=' + urllib.quote(loc.name)
             rawfile = get_url(url)
             dom = etree.fromstring(rawfile)
             try:
                 lat = dom.xpath('//location/lat')[0].text
                 lng = dom.xpath('//location/lng')[0].text
-                self.write(cr, uid, loc.id, {'lat':lat, 'lng':lng})
+                loc.write({'lat': lat, 'lng': lng})
             except:
                 print url
-                raise osv.except_osv('Error !', 'Unable to get location !')
-        return
+                raise UserError('Unable to get location !')
 
- 
-
-
-class fleet_route(osv.osv):
+class fleet_route(models.Model):
     _inherit = 'fleet.route'
-    _columns = {
-       'from_lat': fields.related( 'from_loc_id',   'lat',  type="float",  digits=(9, 6),  string="Latitude from" ),
-       'from_lng': fields.related( 'from_loc_id',   'lng',  type="float",  digits=(9, 6),  string="Longitude from" ),
-       'to_lat': fields.related( 'to_loc_id',   'lat',  type="float",   digits=(9, 6), string="Latitude to" ),
-       'to_lng': fields.related( 'to_loc_id',   'lng',  type="float",   digits=(9, 6), string="Longitude to" ),
-       #todo: add via  in care sa fie mai multe puncte
-       # de adaugat un KML
-    }   
-    
-    def action_get_distance_duration(self,cr, uid, ids, context=None):   
-        for route in self.browse(cr, uid, ids, context=context):
-            
+
+    from_lat = fields.Float(related='from_loc_id.lat', digits=(9, 6), string="Latitude from")
+    from_lng = fields.Float(related='from_loc_id.lng', digits=(9, 6), string="Longitude from")
+    to_lat = fields.Float(related='to_loc_id.lat', digits=(9, 6), string="Latitude to")
+    to_lng = fields.Float(related='to_loc_id.lng', digits=(9, 6), string="Longitude to")
+
+    # todo: add via  in care sa fie mai multe puncte
+    # de adaugat un KML
+
+    @api.multi
+    def action_get_distance_duration(self):
+        for route in self:
+
             url = 'http://maps.googleapis.com/maps/api/directions/xml?'
             params = {
                 'origin': route.from_loc_id.name,
@@ -178,21 +162,16 @@ class fleet_route(osv.osv):
                 'mode': 'driving',
             }
             if route.from_lat and route.from_lng:
-                params['origin'] =  str(route.from_lat)+','+str(route.from_lng)
+                params['origin'] = str(route.from_lat) + ',' + str(route.from_lng)
             if route.to_lat and route.to_lng:
-                params['destination'] =  str(route.to_lat)+','+str(route.to_lng) 
-                           
-            encoded_params = urllib.urlencode(params)    
+                params['destination'] = str(route.to_lat) + ',' + str(route.to_lng)
+
+            encoded_params = urllib.urlencode(params)
             url = url + encoded_params
             rawfile = get_url(url)
             dom = etree.fromstring(rawfile)
             status = dom.xpath('//DirectionsResponse/status')[0].text
             if status == 'OK':
-                duration = float(dom.xpath('/DirectionsResponse/route/leg/duration/value')[0].text)/60/60
-                distance = float(dom.xpath('/DirectionsResponse/route/leg/distance/value')[0].text)/1000
-                self.write(cr, uid, route.id, {'duration':duration,'distance':distance})
-        return 
-    
- 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+                duration = float(dom.xpath('/DirectionsResponse/route/leg/duration/value')[0].text) / 60 / 60
+                distance = float(dom.xpath('/DirectionsResponse/route/leg/distance/value')[0].text) / 1000
+                route.write({'duration': duration, 'distance': distance})
