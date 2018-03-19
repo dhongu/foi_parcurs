@@ -28,7 +28,7 @@
 						<button name="action_get_lat_lng" type="object" string="Get Lat Lng" />
 					</field>
 					<group position="after">
-						<widget type="gmap_marker" lat="lat" lng="lng" />
+						<widget name="gmap_marker" lat="lat" lng="lng" />
 					</group>
 				</data>
 			</field>
@@ -41,7 +41,7 @@
 			<field name="arch" type="xml">
 				<field name="lat" />
 				<field name="lng" />
-				<widget type="gmap_marker" lat="lat" lng="lng" />
+				<widget name="gmap_marker" lat="lat" lng="lng" />
 			</field>
 		</record>
 
@@ -80,7 +80,10 @@
 					<div id="map" position="replace">
 						<button name="action_get_distance_duration" type="object"
 							string="Get Distance Duration" />
-						<widget type="gmap_route" from_lat="from_lat" from_lng="from_lng" to_lat="to_lat" to_lng="to_lng" />
+						<widget name="gmap_route" from_lat="from_lat"  from_lng="from_lng"
+												  to_lat="to_lat" to_lng="to_lng"
+								                        distance="distance" duration="duration"/>
+
 					</div>
 				</data>
 
@@ -96,13 +99,13 @@
 				<field name="from_lng" />
 				<field name="to_lat" />
 				<field name="to_lng" />
-				<widget type="gmap_route" from_lat="from_lat" from_lng="from_lng" to_lat="to_lat" to_lng="to_lng" />
+				<widget name="gmap_route" from_lat="from_lat" from_lng="from_lng" to_lat="to_lat" to_lng="to_lng" />
 			</field>
 		</record>
 
 
 		
-		<record id='fleet_route_act' model='ir.actions.act_window' >
+		<record id='alfa_fleet.fleet_route_act' model='ir.actions.act_window' >
 			<field name="name">Routes</field>
 			<field name="res_model">fleet.route</field>
 			<field name="view_type">form</field>
@@ -112,7 +115,7 @@
 			</field>
 		</record>
 		
-		<record id='fleet_location_act' model='ir.actions.act_window' >
+		<record id='alfa_fleet.fleet_location_act' model='ir.actions.act_window' >
 			<field name="name">Locations</field>
 			<field name="res_model">fleet.location</field>
 			<field name="view_type">form</field>

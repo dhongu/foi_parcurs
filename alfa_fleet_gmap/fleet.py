@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008 Deltatech All Rights Reserved
+# Copyright (c) 2008-2018 Deltatech All Rights Reserved
 #                    Dorin Hongu <dhongu(@)gmail(.)com       
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,22 @@ from odoo import models, fields, api, _
 from lxml import etree
 from odoo.exceptions import UserError
 
-import urllib
-import urllib2
+import requests
+
+
+import sys
+PY2 = sys.version_info[0] == 2
+
+if PY2:
+    from urllib2 import Request, urlopen
+    from urllib import urlencode, quote
+else:
+    from urllib.request import Request, urlopen
+    from urllib.parse import urlencode, quote
+
+
+
+
 
 try:
     import json
@@ -48,26 +62,29 @@ def fetch_json(query_url, params={}, headers={}):
     :rtype: (string, dict or array)
     
     """
-    encoded_params = urllib.urlencode(params)
+    encoded_params = urlencode(params)
     url = query_url + encoded_params
-    request = urllib2.Request(url, headers=headers)
-    response = urllib2.urlopen(request)
-    return (url, json.load(response))
+    # request = urllib2.Request(url, headers=headers)
+    # response = urllib2.urlopen(request)
+    # res_json = json.load(response)
+
+    res = requests.post(encoded_params)
+    if res.status_code == 200:
+        res_json = res.json()
+
+    return (url, res_json)
 
 
 def get_url(url):
     """Return a string of a get url query"""
-    try:
-        import urllib
 
-        objfile = urllib.urlopen(url)
-        rawfile = objfile.read()
-        objfile.close()
-        return rawfile
-    except ImportError:
-        raise UserError('Unable to import urllib !')
-    except IOError:
-        raise UserError('Web Service does not exist !')
+    r = requests.get(url)
+    if r.status_code == '200':
+        rawfile = r.content
+    else:
+        rawfile = False
+    return rawfile
+
 
 
 class GoogleMaps(object):
@@ -128,7 +145,7 @@ class fleet_location(models.Model):
     @api.multi
     def action_get_lat_lng(self):
         for loc in self:
-            url = 'http://maps.googleapis.com/maps/api/geocode/xml?address=' + urllib.quote(loc.name)
+            url = 'http://maps.googleapis.com/maps/api/geocode/xml?address=' + quote(loc.name)
             rawfile = get_url(url)
             dom = etree.fromstring(rawfile)
             try:
@@ -136,7 +153,7 @@ class fleet_location(models.Model):
                 lng = dom.xpath('//location/lng')[0].text
                 loc.write({'lat': lat, 'lng': lng})
             except:
-                print url
+
                 raise UserError('Unable to get location !')
 
 class fleet_route(models.Model):
@@ -166,7 +183,7 @@ class fleet_route(models.Model):
             if route.to_lat and route.to_lng:
                 params['destination'] = str(route.to_lat) + ',' + str(route.to_lng)
 
-            encoded_params = urllib.urlencode(params)
+            encoded_params = urlencode(params)
             url = url + encoded_params
             rawfile = get_url(url)
             dom = etree.fromstring(rawfile)

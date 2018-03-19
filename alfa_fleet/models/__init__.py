@@ -21,10 +21,10 @@
 
 
 
-import fleet_vehicle
-import fleet
-import fleet_sheet
-import res_partner
+from . import fleet_vehicle
+from . import fleet
+from . import fleet_sheet
+from . import res_partner
 
 
 

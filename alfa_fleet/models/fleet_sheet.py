@@ -39,7 +39,7 @@ class fleet_map_sheet(models.Model):
     @api.multi
     @api.depends('vehicle_id', 'date_start', 'distance_total')
     def _compute_odometer_start(self):
-        print "_compute_odometer_start"
+
         for record in self:
             if record.odometer_start_id:
                 record.odometer_start = record.odometer_start_id.value
@@ -60,7 +60,7 @@ class fleet_map_sheet(models.Model):
     @api.multi
     @api.depends('vehicle_id', 'date_end', 'distance_total')
     def _compute_odometer_end(self):
-        print "_compute_odometer_end"
+
         for record in self:
             if record.odometer_end_id:
                 record.odometer_end = record.odometer_end_id.value
@@ -548,7 +548,7 @@ class fleet_route_log(models.Model):
             if prev_route_log:
                 domain = domain.append(('from_loc_id', '=', prev_route_log.route_id.to_loc_id.id))
 
-        print "Domain:", domain
+
         """
         date_end = self.date_end
         context = self.env.context

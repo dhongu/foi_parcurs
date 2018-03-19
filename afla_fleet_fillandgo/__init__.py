@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008 Alfatek All Rights Reserved
+# Copyright (c) 2008-2018 Alfatek All Rights Reserved
 #                    Dorin Hongu <dhongu(@)gmail(.)com       
 #
 ##############################################################################
 
-import fillandgo
+from . import fillandgo
 
 
 

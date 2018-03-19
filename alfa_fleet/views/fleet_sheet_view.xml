@@ -129,6 +129,7 @@
                 </tree>
             </field>
         </record>
+        <!--
         <record id="fleet_map_sheet_gantt" model="ir.ui.view">
             <field name="name">fleet.map.sheet.gantt</field>
             <field name="model">fleet.map.sheet</field>
@@ -137,6 +138,7 @@
                        default_group_by="vehicle_id"></gantt>
             </field>
         </record>
+        -->
         <record id="fleet_map_sheet_calendar" model="ir.ui.view">
             <field name="name">fleet.map.sheet.calendar</field>
             <field name="model">fleet.map.sheet</field>
@@ -176,7 +178,7 @@
             <field name="name">Map Sheets</field>
             <field name="res_model">fleet.map.sheet</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,gantt,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <!--	<field name="context">{"search_default_groupby_date": True,  "search_default_groupby_vehicle_id" : True,}</field> -->
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Click to create a new map sheet.</p>

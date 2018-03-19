@@ -192,6 +192,8 @@
                 </tree>
             </field>
         </record>
+        <!--
+        Gantt is not available in 11.0
         <record id="fleet_route_log_gantt" model="ir.ui.view">
             <field name="name">fleet.route.log.gantt</field>
             <field name="model">fleet.route.log</field>
@@ -200,6 +202,7 @@
                        default_group_by="vehicle_id"></gantt>
             </field>
         </record>
+        -->
         <record id="fleet_route_log_calendar" model="ir.ui.view">
             <field name="name">fleet.map.sheet.reoute.calendar</field>
             <field name="model">fleet.route.log</field>
@@ -226,7 +229,7 @@
             <field name="name">Route Log</field>
             <field name="res_model">fleet.route.log</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,gantt,calendar</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="context">{ "search_default_groupby_vehicle_id" : True,}</field>
         </record>
         <menuitem action="fleet_route_log_act" parent="fleet.fleet_vehicles" id="fleet_route_log_menu"
