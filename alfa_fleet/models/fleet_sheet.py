@@ -21,7 +21,7 @@
 
 
 
-from odoo.exceptions import except_orm, Warning, RedirectWarning, ValidationError
+from odoo.exceptions import UserError, RedirectWarning, ValidationError
 from odoo import models, fields, api, _
 from odoo import SUPERUSER_ID, api
 import odoo.addons.decimal_precision as dp
@@ -379,7 +379,7 @@ class fleet_map_sheet(models.Model):
         """Allows to delete map sheet in draft,cancel states"""
         for rec in self:
             if rec.state not in ['draft', 'cancel']:
-                raise Warning(_('Cannot delete a map sheet which is in state \'%s\'.') % (rec.state,))
+                raise UserError(_('Cannot delete a map sheet which is in state \'%s\'.') % (rec.state,))
         return super(fleet_map_sheet, self).unlink()
 
     @api.multi
@@ -417,7 +417,7 @@ class fleet_map_sheet(models.Model):
     def action_done(self):
         for rec in self:
             if rec.distance_total == 0:
-                raise Warning(_('Cannot set done a map sheet which distance equal with zero.'))
+                raise UserError(_('Cannot set done a map sheet which distance equal with zero.'))
 
         self.write({'state': 'done'})
         for map_sheet in self:
@@ -596,5 +596,5 @@ class fleet_route_log(models.Model):
         """Allows to delete route log in draft states"""
         for rec in self:
             if rec.state not in ['draft', False]:
-                raise Warning(_('Cannot delete a route log which is in state \'%s\'.') % (rec.state,))
+                raise UserError(_('Cannot delete a route log which is in state \'%s\'.') % (rec.state,))
         return super(fleet_route_log, self).unlink()

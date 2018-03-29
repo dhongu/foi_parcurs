@@ -345,7 +345,7 @@ class fleet_map_sheet(models.Model):
         """Allows to delete map sheet in draft,cancel states"""
         for rec in self:
             if rec.state not in ['draft', 'cancel']:
-                raise Warning(_('Cannot delete a map sheet which is in state \'%s\'.') % (rec.state,))
+                raise UserError(_('Cannot delete a map sheet which is in state \'%s\'.') % (rec.state,))
         return super(fleet_map_sheet, self).unlink()
 
     @api.multi
@@ -384,7 +384,7 @@ class fleet_map_sheet(models.Model):
     def action_done(self, ):
         for rec in self:
             if rec.distance_total == 0:
-                raise Warning(_('Cannot set done a map sheet which distance equal with zero.'))
+                raise UserError(_('Cannot set done a map sheet which distance equal with zero.'))
 
         self.write({'state': 'done'})
         for map_sheet in self:

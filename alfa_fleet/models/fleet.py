@@ -21,7 +21,7 @@
 
 
 
-from odoo.exceptions import except_orm, Warning, RedirectWarning, ValidationError
+from odoo.exceptions import UserError, RedirectWarning, ValidationError
 from odoo import models, fields, api, _
 from odoo import SUPERUSER_ID, api
 import odoo.addons.decimal_precision as dp
