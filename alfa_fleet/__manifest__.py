@@ -11,10 +11,10 @@
     "depends": ["fleet"],
 
     "data": [
-        "fleet_data.xml",
+        "data/fleet_data.xml",
         "views/fleet_view.xml",
         "views/fleet_sheet_view.xml",
-        "fleet_report.xml",
+        "views/fleet_report.xml",
         "views/report_map_sheet.xml",
         'security/ir.model.access.csv'
     ],
