@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!--
         <record id="sequence_fleet_road_map_type" model="ir.sequence.type">
@@ -79,4 +79,4 @@ ERO_VE_O4	Remorca  peste 10t
    	-->
     </data>
     
-</openerp>
+</odoo>

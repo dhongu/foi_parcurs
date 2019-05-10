@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- inherit view -->
@@ -96,7 +96,7 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="date" position="replace">
-                        <field name="date_time"/>
+                        <field name="date_time" required="1"/>
                     </field>
                     <field name="vehicle_id" position="after">
                         <field name="reservoir_level"/>
@@ -450,4 +450,4 @@
                   id="fleet_vehicle_category_menu" groups="fleet.fleet_group_user"/>
 
     </data>
-</openerp>
+</odoo>
