@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008 Deltatech All Rights Reserved
+# Copyright (c) 2016 Deltatech All Rights Reserved
 #                    Dorin Hongu <dhongu(@)gmail(.)com       
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,30 +20,11 @@
 ##############################################################################
 
 
-from odoo import models, api
+import fleet_gps_process
 
-class res_partner(models.Model):
-    _inherit = 'res.partner'
 
-    """
-    @api.multi
-    def name_get(self):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        res = []
-        for record in self:
-            name = record.name
-            #if record.parent_id and not record.is_company:
-            #    name =  "%s, %s" % (record.parent_id.name, name)
-            if context.get('show_address'):
-                name = name + "\n" + self._display_address( without_company=True, context=context)
-                name = name.replace('\n\n','\n')
-                name = name.replace('\n\n','\n')
-            if context.get('show_email') and record.email:
-                name = "%s <%s>" % (name, record.email)
-            res.append((record.id, name))
-        return res
-    """
+
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

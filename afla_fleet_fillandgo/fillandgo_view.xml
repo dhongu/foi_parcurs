@@ -28,7 +28,7 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem action="fleet_fillandgo_act" parent="fleet.fleet_vehicles" id="fleet_fillandgo_menu" groups="fleet.fleet_group_user"/>
+		<menuitem action="fleet_fillandgo_act" parent="fleet.fleet_vehicles" id="fleet_fillandgo_menu" groups="fleet.group_fleet_user"/>
 
 	</data>
 </openerp>

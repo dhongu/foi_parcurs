@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- inherit view -->
+		<!-- Vehicle -->
+		<record id="alfa_fleet_form_view" model="ir.ui.view">
+			<field name="name">alfa.fleet.form</field>
+			<field name="model">fleet.vehicle</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="fleet.fleet_vehicle_form" />
+			<field name="arch" type="xml">
+
+
+				 <group string="Engine Options"   position="before">
+			 		<group string="GPS">
+			 			<field name="id_gps" />
+			 			<field name="lat" /> 
+			 			<field name="lng" />
+			 			<field name="gps_date" />
+			 			<field name="nmea_protocol" />
+			 			
+			 		</group>
+					
+				 </group>
+
+			</field>
+		</record>
+
+	</data>
+</openerp>

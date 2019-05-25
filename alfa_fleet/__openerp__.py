@@ -19,21 +19,51 @@
 #
 ##############################################################################
 {
-    "name" : "Fleet Extension Google Maps",
+    "name" : "Fleet Sheet",
     "version" : "1.0",
     "author" : "Dorin Hongu",
-    "category" : "Generic Modules",
-    "depends" : ["alfa_fleet", "web_gmaps"],
-    "init_xml" : [],
-    "demo_xml" : [],
+    "category" : "Managing vehicles and contracts",
+    'summary' : 'Vehicle, route, map sheet',
+    "depends" : ["fleet"],
     "description" : """
+Extension for Fleet Application
+==================================
+Acest modul este o extensie a aplicatiei de gestiune parc auto.
+
+Main Features
+-------------
+* Campuri suplimentare in  detele de baza ale unui vehicul.
+        * indicativ
+        * sofer de rezerva
+        * categorie
+        * nivel rezervor
+        * capacitate rezervor
+        * consum mediu
+        * viteza medie
+        * carduri de alimentare
+* Gestionare carduri de alimentare
+* Gestionare trasee
+        * gestionare locatii
+        * gestionare distante intre locatii si durate de deplasare
+* Gestionare foi de parcurs
+        * trasee aferente unei foi de parcusrs
+        * carburant
+* Calculare automata a nivelului de carburant din rezervor
+
+Nota
+Campul data din fleet trebuie modificat in datatime
+
 
     """,
     "data" : [
-
+            "fleet_data.xml",
             "fleet_view.xml",
-
+            "fleet_report.xml",
+            "views/report_map_sheet.xml",
+            'security/ir.model.access.csv'
     ],
+    
+
     "active": False,
     "installable": True,
    

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2015 Deltatech All Rights Reserved
+# Copyright (c) 2008 Deltatech All Rights Reserved
 #                    Dorin Hongu <dhongu(@)gmail(.)com       
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,32 +19,35 @@
 #
 ##############################################################################
 
-
-import time
-from openerp.report import report_sxw
 from openerp.osv import osv
-from openerp import pooler
- 
 
 
-
-class map_sheet(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(map_sheet, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-        })
-
-
-
-        
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
     
-class report_map_sheet(osv.AbstractModel):
-    _name = 'report.alfa_fleet.report_map_sheet'
-    _inherit = 'report.abstract_report'
-    _template = 'alfa_fleet.report_map_sheet'
-    _wrapped_report_class = map_sheet
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.name
+            #if record.parent_id and not record.is_company:
+            #    name =  "%s, %s" % (record.parent_id.name, name)
+            if context.get('show_address'):
+                name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
+                name = name.replace('\n\n','\n')
+                name = name.replace('\n\n','\n')
+            if context.get('show_email') and record.email:
+                name = "%s <%s>" % (name, record.email)
+            res.append((record.id, name))
+        return res
+
+
+res_partner()
+
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-

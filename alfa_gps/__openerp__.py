@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008 Deltatech All Rights Reserved
+# Copyright (c) 2016 Deltatech All Rights Reserved
 #                    Dorin Hongu <dhongu(@)gmail(.)com       
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,49 +19,24 @@
 #
 ##############################################################################
 {
-    "name" : "Alfatek Fleet",
+    "name" : "Fleet GPS",
     "version" : "1.0",
     "author" : "Dorin Hongu",
     "category" : "Managing vehicles and contracts",
     'summary' : 'Vehicle, route, map sheet',
-    "depends" : ["fleet"],
+    "depends" : ["alfa_fleet_gmap"],
     "description" : """
 Extension for Fleet Application
 ==================================
-Acest modul este o extensie a aplicatiei de gestiune parc auto.
+Acest modul permite preluarea de date de la un GPS
 
 Main Features
 -------------
-* Campuri suplimentare in  detele de baza ale unui vehicul.
-        * indicativ
-        * sofer de rezerva
-        * categorie
-        * nivel rezervor
-        * capacitate rezervor
-        * consum mediu
-        * viteza medie
-        * carduri de alimentare
-* Gestionare carduri de alimentare
-* Gestionare trasee
-        * gestionare locatii
-        * gestionare distante intre locatii si durate de deplasare
-* Gestionare foi de parcurs
-        * trasee aferente unei foi de parcusrs
-        * carburant
-* Calculare automata a nivelului de carburant din rezervor
-
-Nota
-Campul data din fleet trebuie modificat in datatime
-
+*   
 
     """,
-    "data" : [
-            "fleet_data.xml",
-            "views/fleet_view.xml",
-            "views/fleet_sheet_view.xml",
-            "fleet_report.xml",
-            "views/report_map_sheet.xml",
-            'security/ir.model.access.csv'
+    "data" : [ 'fleet_view.xml'
+      
     ],
     
 
